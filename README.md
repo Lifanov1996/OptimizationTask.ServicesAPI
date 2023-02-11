@@ -11,7 +11,7 @@
 
 - [ServicesAPI-приложение](https://github.com/Lifanov1996/OptimizationTask.ServicesAPI/tree/main/ServicesAPI)
 
-- WEB-приложение
+- Web-приложение
 
 - Desktop-приложение
 
