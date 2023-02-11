@@ -1,4 +1,4 @@
-# OptimizationTask.ServicesAPI
+# Дипломная работа
 
 ## ЦЕЛЬ ПРОЕКТА
 
