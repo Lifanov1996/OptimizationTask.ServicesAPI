@@ -1,6 +1,6 @@
 ﻿namespace ServicesAPI.Models.Projects
 {
-    public class Project
+    public class Projects
     {
         public int Id { get; set; }
         public string Header { get; set; }
