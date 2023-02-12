@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ServicesAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class TestDB : Migration
+    public partial class ServicesApi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

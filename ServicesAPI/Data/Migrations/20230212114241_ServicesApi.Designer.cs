@@ -12,8 +12,8 @@ using ServicesAPI.Data.Entity;
 namespace ServicesAPI.Migrations
 {
     [DbContext(typeof(ContextDB))]
-    [Migration("20230212112738_TestDB")]
-    partial class TestDB
+    [Migration("20230212114241_ServicesApi")]
+    partial class ServicesApi
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
