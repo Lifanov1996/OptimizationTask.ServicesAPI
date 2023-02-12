@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="BusinessLogic\Services\Application\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
 
