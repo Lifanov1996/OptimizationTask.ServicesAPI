@@ -7,6 +7,6 @@
         public string NameClient { get; set; }
         public string DescriptionApp { get; set; }
         public string StatusApp { get; set; }
-        public string EmailClient { get; set; }
+        public string EmailClient { get; set; }      
     }
 }

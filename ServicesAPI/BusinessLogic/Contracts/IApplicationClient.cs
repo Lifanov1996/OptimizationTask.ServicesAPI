@@ -1,4 +1,6 @@
-﻿namespace ServicesAPI.BusinessLogic.Contracts
+﻿using ServicesAPI.Models.Applications;
+
+namespace ServicesAPI.BusinessLogic.Contracts
 {
     public interface IApplicationClient
     {
@@ -8,6 +10,6 @@
         /// <param name="NameCl">Имя клиента</param>
         /// <param name="Description">Сообщение заявки</param>
         /// <param name="Email">Элетронная почта клиента</param>
-        Task SendAppClient(string NameCl, string Description, string Email);
+        Task<Applications> AddAppClientAsync(ApplicationsClient client);
     }
 }

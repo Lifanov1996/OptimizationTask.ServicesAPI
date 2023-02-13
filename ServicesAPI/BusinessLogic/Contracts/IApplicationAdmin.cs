@@ -10,26 +10,26 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="appId">Номер заявки</param>
         /// <returns></returns>
-        Task<Applications> SeeOneApp(string appId);
+        Task<Applications> SeeOneAppAsync(int appId);
 
         /// <summary>
         /// Получение всех заявкок
         /// </summary>
         /// <returns></returns>
-        Task<List<Applications>> SeeAllApp();
+        Task<IEnumerable<Applications>> SeeAllAppAsync();
 
         /// <summary>
         /// Изменение статуса заявки
         /// </summary>
         /// <param name="applications"></param>
         /// <returns></returns>
-        Task ChangStatusApp(Applications applications);
+        Task<Applications> UpdateStatusAppAsync(Applications applications);
 
         /// <summary>
         /// Удаление заявки 
         /// </summary>
         /// <param name="appId">Номер заявки</param>
         /// <returns></returns>
-        Task DeleteApp(string appId);
+        Task<bool> DeleteAppAsync(int appId);
     }
 }

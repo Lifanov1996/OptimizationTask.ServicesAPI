@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ServicesAPI.BusinessLogic.Contracts;
+using ServicesAPI.BusinessLogic.Services.Application;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Users;
 
@@ -13,7 +15,10 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("ConnectionMSSQLServer");
 builder.Services.AddDbContext<ContextDB>(options => options.UseSqlServer(connectionString));
 
-var app = builder.Build();
+
+//Dependencies
+builder.Services.AddScoped<IApplicationClient, ApplicationClinet>();
+builder.Services.AddScoped<IApplicationAdmin, ApplicationAdmin>();
 
 //Identity
 builder.Services.AddIdentity<User, IdentityRole>()
@@ -25,6 +30,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.SlidingExpiration = true;
 });
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
