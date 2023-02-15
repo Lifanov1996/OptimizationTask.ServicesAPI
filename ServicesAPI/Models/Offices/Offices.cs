@@ -1,6 +1,6 @@
-﻿namespace ServicesAPI.Models.Services
+﻿namespace ServicesAPI.Models.Offices
 {
-    public class Services
+    public class Offices
     {
         public int Id { get; set; }
         public string Header { get; set; }

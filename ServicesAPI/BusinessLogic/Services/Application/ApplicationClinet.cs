@@ -18,7 +18,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         {
             _model = new Applications()
             {
-                DateTimeCreatApp = DateTime.Now,
+                DateTimeCreatApp = DateTime.Now(гггг,мм,дд, чч,мм),
                 NameClient = client.NameClient,
                 DescriptionApp = client.DescriptionApp,
                 EmailClient = client.EmailClient,

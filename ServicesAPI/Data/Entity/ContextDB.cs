@@ -5,7 +5,7 @@ using ServicesAPI.Models.Contacts;
 using ServicesAPI.Models.Headers;
 using ServicesAPI.Models.News;
 using ServicesAPI.Models.Projects;
-using ServicesAPI.Models.Services;
+using ServicesAPI.Models.Offices;
 using ServicesAPI.Models.Users;
 
 namespace ServicesAPI.Data.Entity
@@ -17,7 +17,7 @@ namespace ServicesAPI.Data.Entity
         public DbSet<Headers> Headers { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<Projects> Projects { get; set; }
-        public DbSet<Services> Services { get; set; }
+        public DbSet<Offices> Offices { get; set; }
         
         public ContextDB(DbContextOptions options) :base(options) { }
     }
