@@ -29,6 +29,6 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="headers">Id хэдера</param>
         /// <returns></returns>
-        Task<bool> DeletHeaderAsync(int idHead);
+        Task<bool> DeletHeaderAsync();
     }
 }

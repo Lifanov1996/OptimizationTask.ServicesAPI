@@ -6,7 +6,7 @@ using System.Net;
 
 namespace ServicesAPI.Controllers
 {
-    [Route("api/Test")]
+    [Route("Test")]
     [ApiController]
     public class TestController : ControllerBase
     {
@@ -82,9 +82,9 @@ namespace ServicesAPI.Controllers
 
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        public async Task DeletAsync(int id)
+        public async Task<bool> DeletAsync(int id)
         {
-            await _appAdmin.DeleteAppAsync(id);            
+            return await _appAdmin.DeleteAppAsync(id);            
         }
     }
 }

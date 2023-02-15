@@ -22,9 +22,11 @@ namespace ServicesAPI.BusinessLogic.Services.Header
         }
 
 
-        public Task<Headers> AddHeaderAsync(Headers header)
+        public async Task<Headers> AddHeaderAsync(Headers header)
         {
-            throw new NotImplementedException();
+            await _contextDB.Headers.AddAsync(header);
+            await _contextDB.SaveChangesAsync();
+            return header;
         }
 
 
@@ -36,7 +38,7 @@ namespace ServicesAPI.BusinessLogic.Services.Header
         }
 
 
-        public async Task<bool> DeletHeaderAsync(int idHead)
+        public async Task<bool> DeletHeaderAsync()
         {
             var head = await _contextDB.Headers.FirstAsync();
             if (head != null)

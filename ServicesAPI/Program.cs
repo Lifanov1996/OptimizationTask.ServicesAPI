@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.BusinessLogic.Services.Application;
+using ServicesAPI.BusinessLogic.Services.Header;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Users;
 
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<ContextDB>(options => options.UseSqlServer(connect
 //Dependencies
 builder.Services.AddScoped<IApplicationClient, ApplicationClinet>();
 builder.Services.AddScoped<IApplicationAdmin, ApplicationAdmin>();
+builder.Services.AddScoped<IHeader, Header>();
 
 //Identity
 builder.Services.AddIdentity<User, IdentityRole>()
