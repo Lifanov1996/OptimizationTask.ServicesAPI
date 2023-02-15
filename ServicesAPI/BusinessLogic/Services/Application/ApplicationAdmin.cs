@@ -16,6 +16,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             _contextDB = contextDB;
         }
 
+
         public async Task<Applications> SeeOneAppAsync(int appId)
         {
             var result =  await _contextDB.Applications.FindAsync(appId);    
@@ -26,10 +27,12 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             return result;
         }
 
+
         public async Task<IEnumerable<Applications>> SeeAllAppAsync()
         {
             return await _contextDB.Applications.AsNoTracking().ToListAsync();
         }
+
 
         public async Task<Applications> UpdateStatusAppAsync(Applications applications)
         {
@@ -48,7 +51,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
                 await _contextDB.SaveChangesAsync();
                 return true;
             }
-           return false;          
+            return false;          
         }
     }
 }
