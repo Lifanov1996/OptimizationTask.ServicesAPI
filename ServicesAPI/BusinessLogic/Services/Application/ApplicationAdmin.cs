@@ -17,28 +17,28 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         }
 
 
-        public async Task<Applications> SeeOneAppAsync(int appId)
+        public async Task<Applications> GetAppAsync(int appId)
         {
-            var result =  await _contextDB.Applications.FindAsync(appId);    
-            if(result == null)
+            var application =  await _contextDB.Applications.FindAsync(appId);    
+            if(application == null)
             {
                 return null;
             }
-            return result;
+            return application;
         }
 
 
-        public async Task<IEnumerable<Applications>> SeeAllAppAsync()
+        public async Task<IEnumerable<Applications>> GetAllAppAsync()
         {
             return await _contextDB.Applications.AsNoTracking().ToListAsync();
         }
 
 
-        public async Task<Applications> UpdateStatusAppAsync(Applications applications)
+        public async Task<Applications> UpdateStatusAppAsync(Applications application)
         {
-            _contextDB.Applications.Update(applications);
+            _contextDB.Applications.Update(application);
             await _contextDB.SaveChangesAsync();
-            return applications;
+            return application;
         }
 
 

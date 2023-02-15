@@ -26,7 +26,7 @@ namespace ServicesAPI.Controllers
         {
             try
             {
-                return Ok(await _appAdmin.SeeAllAppAsync());
+                return Ok(await _appAdmin.GetAllAppAsync());
             }
             catch(Exception ex)
             {
@@ -41,7 +41,7 @@ namespace ServicesAPI.Controllers
         {
             try
             {
-                return Ok(await _appAdmin.SeeOneAppAsync(id));
+                return Ok(await _appAdmin.GetAppAsync(id));
             }
             catch(Exception ex)
             {
