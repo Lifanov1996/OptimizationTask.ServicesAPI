@@ -33,6 +33,14 @@ namespace ServicesAPI.BusinessLogic.Services.Office
         }
 
 
+        public async Task<Offices> AddOfficeAsync(Offices office)
+        {
+            await _contextDB.Offices.AddAsync(office);
+            await _contextDB.SaveChangesAsync();
+            return office;
+        }
+        
+
         public async Task<Offices> UpdateOfficeAppAsync(Offices project)
         {
             _contextDB.Offices.Update(project);

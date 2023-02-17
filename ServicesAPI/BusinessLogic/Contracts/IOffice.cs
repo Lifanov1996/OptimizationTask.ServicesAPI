@@ -18,6 +18,13 @@ namespace ServicesAPI.BusinessLogic.Contracts
         Task<IEnumerable<Offices>> GetAllOfficesAsync();
 
         /// <summary>
+        /// Добавление улуги
+        /// </summary>
+        /// <param name="office"></param>
+        /// <returns></returns>
+        Task<Offices> AddOfficeAsync(Offices office);
+
+        /// <summary>
         /// Изменение услуги
         /// </summary>
         /// <param name="applications"></param>
