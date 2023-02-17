@@ -18,7 +18,14 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
 
         public async Task<Contacts> GetContactAsync()
         {
-            return await _contextDB.Contacts.FirstAsync();
+            try
+            {
+                return await _contextDB.Contacts.FirstAsync();
+            }
+            catch
+            {
+                return await AddContactAsync();
+            }
         }
 
 

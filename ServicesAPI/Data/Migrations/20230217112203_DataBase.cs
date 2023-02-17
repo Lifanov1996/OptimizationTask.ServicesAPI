@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ServicesAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class ServicesApi : Migration
+    public partial class DataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -102,19 +102,17 @@ namespace ServicesAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "News",
+                name: "Offices",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DateTimePublication = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Header = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    File = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_News", x => x.Id);
+                    table.PrimaryKey("PK_Offices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -133,17 +131,19 @@ namespace ServicesAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Services",
+                name: "Tidings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    DateTimePublication = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Header = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    File = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.PrimaryKey("PK_Tidings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -320,13 +320,13 @@ namespace ServicesAPI.Migrations
                 name: "Headers");
 
             migrationBuilder.DropTable(
-                name: "News");
+                name: "Offices");
 
             migrationBuilder.DropTable(
                 name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "Tidings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

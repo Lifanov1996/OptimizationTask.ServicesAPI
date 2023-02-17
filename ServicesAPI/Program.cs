@@ -4,6 +4,9 @@ using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.BusinessLogic.Services.Application;
 using ServicesAPI.BusinessLogic.Services.Contact;
 using ServicesAPI.BusinessLogic.Services.Header;
+using ServicesAPI.BusinessLogic.Services.News;
+using ServicesAPI.BusinessLogic.Services.Office;
+using ServicesAPI.BusinessLogic.Services.Proejct;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Users;
 
@@ -21,8 +24,11 @@ builder.Services.AddDbContext<ContextDB>(options => options.UseSqlServer(connect
 //Dependencies
 builder.Services.AddScoped<IApplicationClient, ApplicationClinet>();
 builder.Services.AddScoped<IApplicationAdmin, ApplicationAdmin>();
+builder.Services.AddScoped<IOffice, Office>();
+builder.Services.AddScoped<IProject, Project>();
 builder.Services.AddScoped<IHeader, Header>();
 builder.Services.AddScoped<IContact, Contact>();
+builder.Services.AddScoped<ITiding, Tiding>();
 
 //Identity
 builder.Services.AddIdentity<User, IdentityRole>()

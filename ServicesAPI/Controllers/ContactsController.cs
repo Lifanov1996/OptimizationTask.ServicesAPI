@@ -25,10 +25,10 @@ namespace ServicesAPI.Controllers
             {
                 return Ok(await _contact.GetContactAsync());
             }
-            catch
+            catch (Exception ex)
             {
-                return Ok(await _contact.AddContactAsync());
-            }
+                return BadRequest(ex.Message);
+            }        
         }
 
         [HttpPut]

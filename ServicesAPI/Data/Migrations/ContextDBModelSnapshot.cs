@@ -245,7 +245,7 @@ namespace ServicesAPI.Migrations
                     b.ToTable("Headers");
                 });
 
-            modelBuilder.Entity("ServicesAPI.Models.News.News", b =>
+            modelBuilder.Entity("ServicesAPI.Models.Offices.Offices", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -253,14 +253,7 @@ namespace ServicesAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateTimePublication")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("File")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -270,7 +263,7 @@ namespace ServicesAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("News");
+                    b.ToTable("Offices");
                 });
 
             modelBuilder.Entity("ServicesAPI.Models.Projects.Projects", b =>
@@ -298,7 +291,7 @@ namespace ServicesAPI.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("ServicesAPI.Models.Services.Services", b =>
+            modelBuilder.Entity("ServicesAPI.Models.Tidings.Tidings", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -306,7 +299,14 @@ namespace ServicesAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DateTimePublication")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("File")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -316,7 +316,7 @@ namespace ServicesAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Services");
+                    b.ToTable("Tidings");
                 });
 
             modelBuilder.Entity("ServicesAPI.Models.Users.User", b =>
