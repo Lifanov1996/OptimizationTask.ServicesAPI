@@ -1,41 +1,42 @@
-﻿using ServicesAPI.Models.Projects;
+﻿using ServicesAPI.Models.Tidings;
 
 namespace ServicesAPI.BusinessLogic.Contracts
 {
-    public interface IProject
+    public interface ITiding
     {
         /// <summary>
-        /// Получение одного проекта
+        /// Получение одной новости
         /// </summary>
         /// <param name="appId">Номер прокта</param>
         /// <returns></returns>
-        Task<Projects> GetProjectAsync(int prId);
+        Task<Tidings> GetTidingAsync(int tidId);
 
         /// <summary>
-        /// Получение всех проектов
+        /// Получение всех новостей
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Projects>> GetAllProjectsAsync();
+        Task<IEnumerable<Tidings>> GetAllTidingsAsync();
 
         /// <summary>
-        /// Добавление проекта
+        /// Добавление новости
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
-        Task<Projects> AddProjectAsync(Projects project);
+        Task<Tidings> AddTidingAsync(Tidings tid);
 
         /// <summary>
-        /// Изменение проекта
+        /// Изменение новости
         /// </summary>
         /// <param name="applications"></param>
         /// <returns></returns>
-        Task<Projects> UpdateProjectAppAsync(Projects project);
+        Task<Tidings> UpdateTidingAppAsync(Tidings tid);
 
         /// <summary>
-        /// Удаление заявки 
+        /// Удаление новости 
         /// </summary>
         /// <param name="appId">Номер проекта</param>
         /// <returns></returns>
-        Task<bool> DeleteAppAsync(int prId);
+        Task<bool> DeleteTidingAsync(int tidId);
+
     }
 }

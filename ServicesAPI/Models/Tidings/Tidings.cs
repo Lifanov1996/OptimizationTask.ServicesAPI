@@ -1,6 +1,6 @@
-﻿namespace ServicesAPI.Models.News
+﻿namespace ServicesAPI.Models.Tidings
 {
-    public class News
+    public class Tidings
     {
         public int Id { get; set; }
         public DateTime DateTimePublication { get; set; }

@@ -32,6 +32,14 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         }
 
 
+        public async Task<Projects> AddProjectAsync(Projects project)
+        {
+            await _contextDB.Projects.AddAsync(project);
+            await _contextDB.SaveChangesAsync();
+            return project;
+        }
+
+
         public async Task<Projects> UpdateProjectAppAsync(Projects project)
         {
             _contextDB.Projects.Update(project);
