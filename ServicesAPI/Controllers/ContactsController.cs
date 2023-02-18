@@ -11,10 +11,13 @@ namespace ServicesAPI.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly IContact _contact;
+        private readonly ILogger<ContactsController> _logger;
 
-        public ContactsController(IContact contact)
+        public ContactsController(IContact contact, ILogger<ContactsController> logger)
         {
             _contact = contact;
+            _logger = logger;
+            _logger.LogInformation(1, "NLog injected into HomeController");
         }
 
         [HttpGet]
@@ -23,6 +26,7 @@ namespace ServicesAPI.Controllers
         {
             try
             {
+                _logger.LogInformation("Hello, this is the index!");
                 return Ok(await _contact.GetContactAsync());
             }
             catch (Exception ex)
@@ -36,10 +40,12 @@ namespace ServicesAPI.Controllers
         {
             try
             {
+                _logger.LogInformation($"Изменение контактной информации");
                 return Ok(await _contact.UpdateContactAsync(cont));
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Ошибка изменения информации - {0}", ex.Message);
                 return BadRequest(ex.Message);
             }
         }
