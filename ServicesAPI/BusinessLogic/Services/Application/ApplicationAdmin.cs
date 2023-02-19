@@ -50,10 +50,17 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         }
 
 
-        public async Task<Applications> UpdateStatusAppAsync(int appId, string status)
+        public async Task<Applications> UpdateStatusAppAsync(int appId, string statusApp)
         {
+            string[] status = { "Получена", "В работе", "Выполнена", "Отклонена", "Отменена" };
             try
             {
+                if(!status.Contains(statusApp))
+                {
+                    _logger.LogError($"Invalid status entered - {statusApp}");
+                    throw new Exception($"Error 400: Invalid status entered - {statusApp}");
+                }
+
                 var application = await _contextDB.Applications.FindAsync(appId);
                 if(application == null)
                 {
@@ -61,7 +68,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
                     throw new Exception("Error 400: Application for this id was not found");
                 }                
 
-                application.StatusApp = status;      
+                application.StatusApp = statusApp;      
                 await _contextDB.SaveChangesAsync();
 
                 _logger.LogInformation($"Update status in application id- {appId}");
