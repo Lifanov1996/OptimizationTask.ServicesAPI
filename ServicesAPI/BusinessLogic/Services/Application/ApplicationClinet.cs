@@ -8,10 +8,10 @@ namespace ServicesAPI.BusinessLogic.Services.Application
     {
         private readonly ContextDB _contextDB;
         private Applications _model;     
-        private Logger<ApplicationClinet> _logger;
+        private ILogger<ApplicationClinet> _logger;
 
-        public ApplicationClinet(ContextDB contextDB,
-                                 Logger<ApplicationClinet> logger)
+        public ApplicationClinet(ContextDB contextDB, 
+                                 ILogger<ApplicationClinet> logger)
         {
             _contextDB = contextDB;
             _logger = logger;
@@ -33,6 +33,8 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             
                 await _contextDB.Applications.AddAsync(_model);
                 await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation($"Add application");
                 return _model;
             }
             catch(Exception ex) 

@@ -80,7 +80,7 @@ namespace ServicesAPI.BusinessLogic.Services.News
             }
             catch(Exception ex)
             {
-                _logger.LogError($"{$"Error update ex- {0}", ex.Message}");
+                _logger.LogError($"Error update ex- {0}", ex.Message);
                 throw new Exception(ex.Message);
             }
         }
