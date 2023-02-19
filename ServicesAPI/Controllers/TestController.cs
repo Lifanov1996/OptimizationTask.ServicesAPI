@@ -66,11 +66,11 @@ namespace ServicesAPI.Controllers
     
 
         [HttpPut]
-        public async Task<ActionResult<Applications>> PutAsync(Applications data)
+        public async Task<ActionResult<Applications>> PutAsync(int id, string status)
         {
             try
             {
-                return Ok(await _appAdmin.UpdateStatusAppAsync(data));
+                return Ok(await _appAdmin.UpdateStatusAppAsync(id, status));
             }
             catch(Exception ex)
             {

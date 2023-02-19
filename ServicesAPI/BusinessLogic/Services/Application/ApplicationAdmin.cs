@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Messaging;
+using Microsoft.EntityFrameworkCore;
 using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Applications;
 using System.Data;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ServicesAPI.BusinessLogic.Services.Application
 {
@@ -26,12 +28,17 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         {
             try
             {
-                var application =  await _contextDB.Applications.FindAsync(appId);              
+                var application =  await _contextDB.Applications.FindAsync(appId);
+                if (application == null)
+                {
+                    _logger.LogError($"The database does not have fields with id- {appId}");
+                    throw new Exception("Error 400: Application for this id was not found");
+                }
                 return application;
             }
             catch(Exception ex)
             {
-                _logger.LogInformation($"The database does not have fields with id- {0}", appId);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -43,19 +50,26 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         }
 
 
-        public async Task<Applications> UpdateStatusAppAsync(Applications application)
+        public async Task<Applications> UpdateStatusAppAsync(int appId, string status)
         {
             try
             {
-                _contextDB.Applications.Update(application);
+                var application = await _contextDB.Applications.FindAsync(appId);
+                if(application == null)
+                {
+                    _logger.LogError($"The database does not have fields with id- {appId}");
+                    throw new Exception("Error 400: Application for this id was not found");
+                }                
+
+                application.StatusApp = status;      
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Update status in application id- {0}", application.Id);
+                _logger.LogInformation($"Update status in application id- {appId}");
                 return application;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Data change error: {0}", ex.Message);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
