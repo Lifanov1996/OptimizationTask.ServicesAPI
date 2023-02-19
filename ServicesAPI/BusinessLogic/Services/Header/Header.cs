@@ -9,10 +9,14 @@ namespace ServicesAPI.BusinessLogic.Services.Header
     public class Header : IHeader
     {
         private readonly ContextDB _contextDB;
+        private ILogger<Header> _logger;
 
-        public Header(ContextDB contextDB)
+        public Header(ContextDB contextDB, 
+                      ILogger<Header> logger)
         {
             _contextDB = contextDB;
+            _logger = logger;
+            _logger.LogInformation("Init Header");
         }
 
 
@@ -24,17 +28,37 @@ namespace ServicesAPI.BusinessLogic.Services.Header
 
         public async Task<Headers> AddHeaderAsync(Headers header)
         {
-            await _contextDB.Headers.AddAsync(header);
-            await _contextDB.SaveChangesAsync();
-            return header;
+            try
+            {
+                await _contextDB.Headers.AddAsync(header);
+                await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation($"Added header");
+                return header;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Error added {0}", ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
 
         public async Task<Headers> UpdateDescrHeaderAsync(Headers header)
         {
-            _contextDB.Headers.Update(header);
-            await _contextDB.SaveChangesAsync();
-            return header;
+            try
+            {
+                _contextDB.Headers.Update(header);
+                await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation("Update header");
+                return header;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Error update header: {0}", ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
 

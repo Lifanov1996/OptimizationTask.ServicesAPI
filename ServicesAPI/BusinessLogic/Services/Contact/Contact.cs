@@ -10,10 +10,14 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
     {
         private readonly ContextDB _contextDB;
         private Contacts _model;
+        private ILogger<Contact> _logger;
 
-        public Contact(ContextDB contextDB)
+        public Contact(ContextDB contextDB, 
+                       ILogger<Contact> logger)
         {
             _contextDB = contextDB;
+            _logger = logger;
+            _logger.LogInformation("Init Contact");
         }
 
         public async Task<Contacts> GetContactAsync()
@@ -24,6 +28,7 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
             }
             catch
             {
+                _logger.LogInformation("Empty table. Adding an example");
                 return await AddContactAsync();
             }
         }
@@ -45,9 +50,19 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
 
         public async Task<Contacts> UpdateContactAsync(Contacts cont)
         {
-            _contextDB.Contacts.Update(cont);
-            await _contextDB.SaveChangesAsync();
-            return cont;
+            try
+            {
+                _contextDB.Contacts.Update(cont);
+                await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation($"Contact updated: {cont}");
+                return cont;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                throw new Exception(ex.Message);
+            }
         }      
     }
 }

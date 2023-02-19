@@ -8,26 +8,38 @@ namespace ServicesAPI.BusinessLogic.Services.Application
     {
         private readonly ContextDB _contextDB;
         private Applications _model;     
+        private Logger<ApplicationClinet> _logger;
 
-        public ApplicationClinet(ContextDB contextDB)
+        public ApplicationClinet(ContextDB contextDB,
+                                 Logger<ApplicationClinet> logger)
         {
-            _contextDB = contextDB;          
+            _contextDB = contextDB;
+            _logger = logger;
+            _logger.LogInformation("Init ApplicationClinet");
         }
 
         public async Task<Applications> AddAppClientAsync(ApplicationsClient client)
         {
-            _model = new Applications()
+            try
             {
-                DateTimeCreatApp = DateTime.Now,
-                NameClient = client.NameClient,
-                DescriptionApp = client.DescriptionApp,
-                EmailClient = client.EmailClient,
-                StatusApp = "Получена"               
-            };
+                _model = new Applications()
+                {
+                    DateTimeCreatApp = DateTime.Now,
+                    NameClient = client.NameClient,
+                    DescriptionApp = client.DescriptionApp,
+                    EmailClient = client.EmailClient,
+                    StatusApp = "Получена"               
+                };
             
-            await _contextDB.Applications.AddAsync(_model);
-            await _contextDB.SaveChangesAsync();
-            return _model;
+                await _contextDB.Applications.AddAsync(_model);
+                await _contextDB.SaveChangesAsync();
+                return _model;
+            }
+            catch(Exception ex) 
+            {
+                _logger.LogError($"Error added application : {0}", ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
