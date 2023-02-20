@@ -12,8 +12,7 @@ namespace ServicesAPI.BusinessLogic.Services.News
         private Tidings _model;
         private ILogger<Tiding> _logger;
 
-        public Tiding(ContextDB contextDB, 
-                      ILogger<Tiding> logger) 
+        public Tiding(ContextDB contextDB, ILogger<Tiding> logger) 
         {
             _contextDB = contextDB;
             _logger = logger;
@@ -25,12 +24,17 @@ namespace ServicesAPI.BusinessLogic.Services.News
         {
             try
             {
-                var result = await _contextDB.Tidings.FindAsync(tidId);               
+                var result = await _contextDB.Tidings.FindAsync(tidId);     
+                if(result == null)
+                {
+                    _logger.LogWarning($"The database does not have fields with id- {tidId}");
+                    throw new Exception("Error 400: Tiding for this id was not found");
+                }
                 return result;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error get tiding by id- {0}: {1}", tidId, ex.Message);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -57,12 +61,12 @@ namespace ServicesAPI.BusinessLogic.Services.News
                 await _contextDB.Tidings.AddAsync(_model);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Add project id- {0}", tid.Id);
+                _logger.LogInformation($"Add project id- {tid.Id}");
                 return _model;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error added tiding - ex {0}", ex.Message);
+                _logger.LogError($"Error added tiding - ex {ex.Message}");
                 throw new Exception(ex.Message);
             }
         }
@@ -75,12 +79,12 @@ namespace ServicesAPI.BusinessLogic.Services.News
                 _contextDB.Tidings.Update(tid);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Updated project app: {0}", tid.Id);
+                _logger.LogInformation($"Updated project app: {tid.Id}");
                 return tid;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error update ex- {0}", ex.Message);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -93,6 +97,8 @@ namespace ServicesAPI.BusinessLogic.Services.News
             {
                 _contextDB.Tidings.Remove(result);
                 await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation($"Deleted tiding: id- {tidId}");
                 return true;
             }
             return false;

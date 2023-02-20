@@ -10,8 +10,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         private Applications _model;     
         private ILogger<ApplicationClinet> _logger;
 
-        public ApplicationClinet(ContextDB contextDB, 
-                                 ILogger<ApplicationClinet> logger)
+        public ApplicationClinet(ContextDB contextDB, ILogger<ApplicationClinet> logger)
         {
             _contextDB = contextDB;
             _logger = logger;
@@ -39,7 +38,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             }
             catch(Exception ex) 
             {
-                _logger.LogError($"Error added application : {0}", ex.Message);
+                _logger.LogError($"Error added application : {ex.Message}");
                 throw new Exception(ex.Message);
             }
         }

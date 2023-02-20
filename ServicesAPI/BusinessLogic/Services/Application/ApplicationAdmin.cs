@@ -15,8 +15,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         private readonly ContextDB _contextDB;
         private ILogger<ApplicationAdmin> _logger;
 
-        public ApplicationAdmin(ContextDB contextDB, 
-                                ILogger<ApplicationAdmin> logger)
+        public ApplicationAdmin(ContextDB contextDB, ILogger<ApplicationAdmin> logger)
         {
             _contextDB = contextDB;
             _logger = logger;
@@ -31,7 +30,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
                 var application =  await _contextDB.Applications.FindAsync(appId);
                 if (application == null)
                 {
-                    _logger.LogError($"The database does not have fields with id- {appId}");
+                    _logger.LogWarning($"The database does not have fields with id- {appId}");
                     throw new Exception("Error 400: Application for this id was not found");
                 }
                 return application;
@@ -57,14 +56,14 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             {
                 if(!status.Contains(statusApp))
                 {
-                    _logger.LogError($"Invalid status entered - {statusApp}");
+                    _logger.LogWarning($"Invalid status entered - {statusApp}");
                     throw new Exception($"Error 400: Invalid status entered - {statusApp}");
                 }
 
                 var application = await _contextDB.Applications.FindAsync(appId);
                 if(application == null)
                 {
-                    _logger.LogError($"The database does not have fields with id- {appId}");
+                    _logger.LogWarning($"The database does not have fields with id- {appId}");
                     throw new Exception("Error 400: Application for this id was not found");
                 }                
 

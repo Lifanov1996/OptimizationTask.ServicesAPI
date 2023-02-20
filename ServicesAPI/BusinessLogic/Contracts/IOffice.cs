@@ -29,7 +29,7 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="applications"></param>
         /// <returns></returns>
-        Task<Offices> UpdateOfficeAppAsync(Offices office);
+        Task<Offices> UpdateOfficeAsync(Offices office);
 
         /// <summary>
         /// Удаление услуги 

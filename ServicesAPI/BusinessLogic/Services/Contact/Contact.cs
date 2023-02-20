@@ -12,8 +12,7 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
         private Contacts _model;
         private ILogger<Contact> _logger;
 
-        public Contact(ContextDB contextDB, 
-                       ILogger<Contact> logger)
+        public Contact(ContextDB contextDB, ILogger<Contact> logger)
         {
             _contextDB = contextDB;
             _logger = logger;

@@ -11,8 +11,7 @@ namespace ServicesAPI.BusinessLogic.Services.Office
         private readonly ContextDB _contextDB;
         private ILogger<Office> _logger;
 
-        public Office(ContextDB contextDB, 
-                      ILogger<Office> logger)
+        public Office(ContextDB contextDB, ILogger<Office> logger)
         {
             _contextDB = contextDB;
             _logger = logger;
@@ -27,13 +26,14 @@ namespace ServicesAPI.BusinessLogic.Services.Office
                 var office = await _contextDB.Offices.FindAsync(offId);
                 if (office == null)
                 {
-                    return null;
+                    _logger.LogWarning($"The database does not have fields with id- {offId}");
+                    throw new Exception("Error 400: Office for this id was not found");
                 }
                 return office;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error get office by id- {0}: {1}", offId, ex.Message);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -52,30 +52,30 @@ namespace ServicesAPI.BusinessLogic.Services.Office
                 await _contextDB.Offices.AddAsync(office);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Added office id- {0}", office.Id);
+                _logger.LogInformation($"Added office id- {office.Id}");
                 return office;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error added {0}", ex.Message);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
         
 
-        public async Task<Offices> UpdateOfficeAppAsync(Offices office)
+        public async Task<Offices> UpdateOfficeAsync(Offices office)
         {
             try
-            {
+            {               
                 _contextDB.Offices.Update(office);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Update office id- {0}", office.Id);
+                _logger.LogInformation($"Update office id- {office.Id}");
                 return office;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error uppdate office : {0}", ex.Message);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -88,6 +88,8 @@ namespace ServicesAPI.BusinessLogic.Services.Office
             {
                 _contextDB.Offices.Remove(office);
                 await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation($"Deleted office: id- {offId}");
                 return true;
             }
             return false;

@@ -11,8 +11,7 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         private readonly ContextDB _contextDB;
         private ILogger<Project> _logger;
 
-        public Project(ContextDB contextDB, 
-                       ILogger<Project> logger)
+        public Project(ContextDB contextDB, ILogger<Project> logger)
         {
             _contextDB = contextDB;
             _logger = logger;
@@ -24,12 +23,17 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         {
             try
             {
-                var project = await _contextDB.Projects.FindAsync(prId);              
+                var project = await _contextDB.Projects.FindAsync(prId);      
+                if (project == null)
+                {
+                    _logger.LogWarning($"The database does not have fields with id- {prId}");
+                    throw new Exception("Error 400: Project for this id was not found");
+                }
                 return project;               
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error get project by id- {0}: {1}", prId, ex.Message);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -47,42 +51,44 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
                 await _contextDB.Projects.AddAsync(project);
                 await _contextDB.SaveChangesAsync();
                 
-                _logger.LogInformation($"Add project id- {0}", project.Id);
+                _logger.LogInformation($"Add project id- {project.Id}");
                 return project;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error added project - ex {0}", ex.Message);
+                _logger.LogError($"Error added project - {ex.Message}");
                 throw new Exception(ex.Message);
             }
         }
 
 
-        public async Task<Projects> UpdateProjectAppAsync(Projects project)
+        public async Task<Projects> UpdateProjectAsync(Projects project)
         {
             try
             {
                 _contextDB.Projects.Update(project);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Updated project app: {0}", project.Id);
+                _logger.LogInformation($"Updated project app: {project.Id}");
                 return project;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error update ex- {0}",ex.Message);
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
 
 
-        public async Task<bool> DeleteAppAsync(int prId)
+        public async Task<bool> DeleteProjectAsync(int prId)
         {
             var project = await _contextDB.Projects.SingleOrDefaultAsync(x => x.Id == prId);
             if (project != null)
             {
                 _contextDB.Projects.Remove(project);
                 await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation($"Remove project: id- {prId}");
                 return true;
             }
             return false;

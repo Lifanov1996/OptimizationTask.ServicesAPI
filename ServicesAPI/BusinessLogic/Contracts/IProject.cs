@@ -29,13 +29,13 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="applications"></param>
         /// <returns></returns>
-        Task<Projects> UpdateProjectAppAsync(Projects project);
+        Task<Projects> UpdateProjectAsync(Projects project);
 
         /// <summary>
         /// Удаление заявки 
         /// </summary>
         /// <param name="appId">Номер проекта</param>
         /// <returns></returns>
-        Task<bool> DeleteAppAsync(int prId);
+        Task<bool> DeleteProjectAsync(int prId);
     }
 }

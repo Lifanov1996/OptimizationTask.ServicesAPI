@@ -11,8 +11,7 @@ namespace ServicesAPI.BusinessLogic.Services.Header
         private readonly ContextDB _contextDB;
         private ILogger<Header> _logger;
 
-        public Header(ContextDB contextDB, 
-                      ILogger<Header> logger)
+        public Header(ContextDB contextDB, ILogger<Header> logger)
         {
             _contextDB = contextDB;
             _logger = logger;
@@ -38,7 +37,7 @@ namespace ServicesAPI.BusinessLogic.Services.Header
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error added {0}", ex.Message);
+                _logger.LogError($"Error added {ex.Message}");
                 throw new Exception(ex.Message);
             }
         }
@@ -56,7 +55,7 @@ namespace ServicesAPI.BusinessLogic.Services.Header
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error update header: {0}", ex.Message);
+                _logger.LogError($"Error update header: {ex.Message}");
                 throw new Exception(ex.Message);
             }
         }
