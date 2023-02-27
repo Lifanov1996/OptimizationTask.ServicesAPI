@@ -4,11 +4,10 @@ namespace ServicesAPI.Models.Users
 {
     public class UserLogin
     {
-        [Required(ErrorMessage = "Не указан логин")]
+        [Required(ErrorMessage = "Логине не указан")]
         public string Login { get; set; }
 
-
-        [Required(ErrorMessage = "Не указан пароль")]
+        [Required(ErrorMessage = "Пароль не указан")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

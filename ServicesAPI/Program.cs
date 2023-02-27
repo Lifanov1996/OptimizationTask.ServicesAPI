@@ -43,6 +43,7 @@ try
     builder.Services.AddScoped<ITiding, Tiding>();
 
     //Identity
+    //builder.Services.AddMediatR(typeof(LoginHandler).Assembly);
     builder.Services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<ContextDB>()
                     .AddDefaultTokenProviders();
@@ -64,7 +65,7 @@ try
 
     app.UseHttpsRedirection();
 
-    app.UseAuthorization();
+    app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllers();
