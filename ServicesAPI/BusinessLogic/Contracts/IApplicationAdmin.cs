@@ -23,7 +23,7 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="applications"></param>
         /// <returns></returns>
-        Task<Applications> UpdateStatusAppAsync(int appId, string status);
+        Task<Applications> UpdateStatusAppAsync(ApplicationsChange appCh);
 
         /// <summary>
         /// Удаление заявки 

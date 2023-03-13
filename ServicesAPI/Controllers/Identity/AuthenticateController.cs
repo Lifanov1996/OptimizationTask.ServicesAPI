@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ServicesAPI.Controllers
+namespace ServicesAPI.Controllers.Identity
 {
     [Route("[controller]")]
     [ApiController]
@@ -60,16 +60,16 @@ namespace ServicesAPI.Controllers
 
                     var token = _token.GetToken(authClaims);
 
-                    _logger.LogInformation($"Login as admin, name- {model.Username}");
+                    _logger.LogInformation($"Login as admin");
                     return Ok(new
                     {
                         token = new JwtSecurityTokenHandler().WriteToken(token),
                         expiration = token.ValidTo
-                    });
+                    }); ;
                 }
                 return Unauthorized();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -103,15 +103,15 @@ namespace ServicesAPI.Controllers
 
                 if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
                     await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            
+
                 if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
                 {
                     await _userManager.AddToRoleAsync(user, UserRoles.Admin);
                 }
-                _logger.LogInformation($"Register as 'admin' name- {model.Username}");
+                _logger.LogInformation($"Register as role 'admin' name - {model.Username}");
                 return Ok(new Response { Status = "Success", Message = "User created successfully!" });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

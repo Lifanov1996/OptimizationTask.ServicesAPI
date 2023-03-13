@@ -49,28 +49,28 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         }
 
 
-        public async Task<Applications> UpdateStatusAppAsync(int appId, string statusApp)
+        public async Task<Applications> UpdateStatusAppAsync(ApplicationsChange appCh)
         {
             string[] status = { "Получена", "В работе", "Выполнена", "Отклонена", "Отменена" };
             try
             {
-                if(!status.Contains(statusApp))
+                if(!status.Contains(appCh.StatusApp))
                 {
-                    _logger.LogWarning($"Invalid status entered - {statusApp}");
-                    throw new Exception($"Error 400: Invalid status entered - {statusApp}");
+                    _logger.LogWarning($"Invalid status entered - {appCh.StatusApp}");
+                    throw new Exception($"Error 400: Invalid status entered - {appCh.StatusApp}");
                 }
 
-                var application = await _contextDB.Applications.FindAsync(appId);
+                var application = await _contextDB.Applications.FindAsync(appCh.Id);
                 if(application == null)
                 {
-                    _logger.LogWarning($"The database does not have fields with id- {appId}");
+                    _logger.LogWarning($"The database does not have fields with id- {appCh.Id}");
                     throw new Exception("Error 400: Application for this id was not found");
                 }                
 
-                application.StatusApp = statusApp;      
+                application.StatusApp = appCh.StatusApp;      
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Update status in application id- {appId}");
+                _logger.LogInformation($"Update status in application id- {appCh.Id}");
                 return application;
             }
             catch(Exception ex)
