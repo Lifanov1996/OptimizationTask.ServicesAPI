@@ -9,7 +9,6 @@ namespace ServicesAPI.BusinessLogic.Services.News
     public class Tiding : ITiding
     {
         private readonly ContextDB _contextDB;
-        private Tidings _model;
         private ILogger<Tiding> _logger;
 
         public Tiding(ContextDB contextDB, ILogger<Tiding> logger) 
@@ -28,7 +27,7 @@ namespace ServicesAPI.BusinessLogic.Services.News
                 if(result == null)
                 {
                     _logger.LogWarning($"The database does not have fields with id- {tidId}");
-                    throw new Exception("Error 400: Tiding for this id was not found");
+                    throw new Exception("Error: Tiding for this id was not found");
                 }
                 return result;
             }
@@ -46,11 +45,11 @@ namespace ServicesAPI.BusinessLogic.Services.News
         }
 
 
-        public async Task<Tidings> AddTidingAsync(Tidings tid)
+        public async Task<Tidings> AddTidingAsync(TidingsAdd tid)
         {
             try
             {
-                _model = new Tidings()
+                Tidings model = new Tidings()
                 {
                     DateTimePublication = DateTime.Now,
                     Header = tid.Header,
@@ -58,11 +57,11 @@ namespace ServicesAPI.BusinessLogic.Services.News
                     File = tid.File
                 };
 
-                await _contextDB.Tidings.AddAsync(_model);
+                await _contextDB.Tidings.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Add project id- {tid.Id}");
-                return _model;
+                _logger.LogInformation($"Add project id- {model.Id}");
+                return model;
             }
             catch(Exception ex)
             {
@@ -98,7 +97,7 @@ namespace ServicesAPI.BusinessLogic.Services.News
                 _contextDB.Tidings.Remove(result);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Deleted tiding: id- {tidId}");
+                _logger.LogInformation($"Remove tiding: id- {tidId}");
                 return true;
             }
             return false;

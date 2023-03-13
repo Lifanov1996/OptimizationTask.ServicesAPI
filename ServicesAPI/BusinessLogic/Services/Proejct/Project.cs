@@ -27,7 +27,7 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
                 if (project == null)
                 {
                     _logger.LogWarning($"The database does not have fields with id- {prId}");
-                    throw new Exception("Error 400: Project for this id was not found");
+                    throw new Exception("Error: Project for this id was not found");
                 }
                 return project;               
             }
@@ -44,15 +44,16 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         }
 
 
-        public async Task<Projects> AddProjectAsync(Projects project)
+        public async Task<Projects> AddProjectAsync(ProjectsAdd project)
         {
             try
             {
-                await _contextDB.Projects.AddAsync(project);
+                Projects model = new Projects { Header = project.Header, File = project.File, Description = project.Description };
+                await _contextDB.Projects.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
                 
-                _logger.LogInformation($"Add project id- {project.Id}");
-                return project;
+                _logger.LogInformation($"Add project id- {model.Id}");
+                return model;
             }
             catch(Exception ex)
             {

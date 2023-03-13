@@ -33,7 +33,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
                 await _contextDB.Applications.AddAsync(_model);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Add application");
+                _logger.LogInformation($"Add application id- {_model.Id}");
                 return _model;
             }
             catch(Exception ex) 

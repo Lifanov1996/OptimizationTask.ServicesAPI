@@ -22,7 +22,7 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="office"></param>
         /// <returns></returns>
-        Task<Offices> AddOfficeAsync(Offices office);
+        Task<Offices> AddOfficeAsync(OfficesAdd office);
 
         /// <summary>
         /// Изменение услуги

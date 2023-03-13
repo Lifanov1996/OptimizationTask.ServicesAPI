@@ -13,6 +13,7 @@ using ServicesAPI.BusinessLogic.Services.Header;
 using ServicesAPI.BusinessLogic.Services.News;
 using ServicesAPI.BusinessLogic.Services.Office;
 using ServicesAPI.BusinessLogic.Services.Proejct;
+using ServicesAPI.BusinessLogic.Tokens;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Users;
 using System;
@@ -48,6 +49,7 @@ try
     builder.Services.AddScoped<IHeader, Header>();
     builder.Services.AddScoped<IContact, Contact>();
     builder.Services.AddScoped<ITiding, Tiding>();
+    builder.Services.AddScoped<IToken, Token>();
 
 
     //Identity

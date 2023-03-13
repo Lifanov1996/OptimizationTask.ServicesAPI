@@ -15,7 +15,7 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
-        Task<Headers> AddHeaderAsync(Headers header);
+        Task<Headers> AddHeaderAsync(HeadersAdd header);
 
         /// <summary>
         /// Изменение хэдера

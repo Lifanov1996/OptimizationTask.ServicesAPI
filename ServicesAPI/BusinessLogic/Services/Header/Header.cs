@@ -25,15 +25,16 @@ namespace ServicesAPI.BusinessLogic.Services.Header
         }
 
 
-        public async Task<Headers> AddHeaderAsync(Headers header)
+        public async Task<Headers> AddHeaderAsync(HeadersAdd header)
         {
             try
             {
-                await _contextDB.Headers.AddAsync(header);
+                Headers model = new Headers { Descriotion = header.Descriotion };
+                await _contextDB.Headers.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
 
                 _logger.LogInformation($"Added header");
-                return header;
+                return model;
             }
             catch(Exception ex)
             {
@@ -68,6 +69,8 @@ namespace ServicesAPI.BusinessLogic.Services.Header
             {
                 _contextDB.Headers.Remove(head);
                 await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation($"Remove header");
                 return true;
             }
             return false;

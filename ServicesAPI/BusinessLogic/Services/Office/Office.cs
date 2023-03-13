@@ -27,7 +27,7 @@ namespace ServicesAPI.BusinessLogic.Services.Office
                 if (office == null)
                 {
                     _logger.LogWarning($"The database does not have fields with id- {offId}");
-                    throw new Exception("Error 400: Office for this id was not found");
+                    throw new Exception("Error: Office for this id was not found");
                 }
                 return office;
             }
@@ -45,15 +45,16 @@ namespace ServicesAPI.BusinessLogic.Services.Office
         }
 
 
-        public async Task<Offices> AddOfficeAsync(Offices office)
+        public async Task<Offices> AddOfficeAsync(OfficesAdd office)
         {
             try
             {
-                await _contextDB.Offices.AddAsync(office);
+                Offices model = new Offices { Header= office.Header, Description = office.Description };
+                await _contextDB.Offices.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Added office id- {office.Id}");
-                return office;
+                _logger.LogInformation($"Added office id- {model.Id}");
+                return model;
             }
             catch(Exception ex)
             {
@@ -89,7 +90,7 @@ namespace ServicesAPI.BusinessLogic.Services.Office
                 _contextDB.Offices.Remove(office);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Deleted office: id- {offId}");
+                _logger.LogInformation($"Remove office: id- {offId}");
                 return true;
             }
             return false;

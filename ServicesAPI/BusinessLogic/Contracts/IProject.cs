@@ -22,7 +22,7 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
-        Task<Projects> AddProjectAsync(Projects project);
+        Task<Projects> AddProjectAsync(ProjectsAdd project);
 
         /// <summary>
         /// Изменение проекта

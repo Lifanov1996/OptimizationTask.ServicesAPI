@@ -51,7 +51,7 @@ namespace ServicesAPI.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(Offices), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Offices>> Post(Offices data)
+        public async Task<ActionResult<Offices>> Post(OfficesAdd data)
         {
             try
             {

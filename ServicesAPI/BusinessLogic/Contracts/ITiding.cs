@@ -22,7 +22,7 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
-        Task<Tidings> AddTidingAsync(Tidings tid);
+        Task<Tidings> AddTidingAsync(TidingsAdd tid);
 
         /// <summary>
         /// Изменение новости

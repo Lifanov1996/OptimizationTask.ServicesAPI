@@ -36,7 +36,7 @@ namespace ServicesAPI.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(Headers), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Headers>> PostAsync(Headers data)
+        public async Task<ActionResult<Headers>> PostAsync(HeadersAdd data)
         {
             try
             {
