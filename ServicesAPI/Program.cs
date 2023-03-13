@@ -1,5 +1,7 @@
- using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Writers;
 using NLog;
 using NLog.Web;
 using ServicesAPI.BusinessLogic.Contracts;
@@ -12,6 +14,7 @@ using ServicesAPI.BusinessLogic.Services.Proejct;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Users;
 using System;
+using System.Data;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Info("init main");
@@ -19,6 +22,7 @@ logger.Info("init main");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
@@ -42,17 +46,9 @@ try
     builder.Services.AddScoped<IContact, Contact>();
     builder.Services.AddScoped<ITiding, Tiding>();
 
-    //Identity
-    //builder.Services.AddMediatR(typeof(LoginHandler).Assembly);
-    builder.Services.AddIdentity<User, IdentityRole>()
-                    .AddEntityFrameworkStores<ContextDB>()
-                    .AddDefaultTokenProviders();
 
-    builder.Services.ConfigureApplicationCookie(options =>
-    {
-        options.Cookie.HttpOnly = true;
-        options.SlidingExpiration = true;
-    });
+    //Identity
+
 
     var app = builder.Build();
 

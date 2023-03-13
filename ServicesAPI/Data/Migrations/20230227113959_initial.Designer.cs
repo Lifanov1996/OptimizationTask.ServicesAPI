@@ -12,15 +12,15 @@ using ServicesAPI.Data.Entity;
 namespace ServicesAPI.Migrations
 {
     [DbContext(typeof(ContextDB))]
-    [Migration("20230227092119_init")]
-    partial class init
+    [Migration("20230227113959_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -322,7 +322,7 @@ namespace ServicesAPI.Migrations
                     b.ToTable("Tidings");
                 });
 
-            modelBuilder.Entity("ServicesAPI.Models.Users.User", b =>
+            modelBuilder.Entity("ServicesAPI.Models.Users.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -332,6 +332,10 @@ namespace ServicesAPI.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -398,7 +402,7 @@ namespace ServicesAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("ServicesAPI.Models.Users.User", null)
+                    b.HasOne("ServicesAPI.Models.Users.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -407,7 +411,7 @@ namespace ServicesAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("ServicesAPI.Models.Users.User", null)
+                    b.HasOne("ServicesAPI.Models.Users.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -422,7 +426,7 @@ namespace ServicesAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ServicesAPI.Models.Users.User", null)
+                    b.HasOne("ServicesAPI.Models.Users.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -431,7 +435,7 @@ namespace ServicesAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("ServicesAPI.Models.Users.User", null)
+                    b.HasOne("ServicesAPI.Models.Users.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

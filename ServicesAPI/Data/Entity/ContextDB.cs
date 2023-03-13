@@ -10,7 +10,7 @@ using ServicesAPI.Models.Users;
 
 namespace ServicesAPI.Data.Entity
 {
-    public class ContextDB : IdentityDbContext<User>
+    public class ContextDB : IdentityDbContext<AppUser>
     {
         public DbSet<Applications> Applications { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
