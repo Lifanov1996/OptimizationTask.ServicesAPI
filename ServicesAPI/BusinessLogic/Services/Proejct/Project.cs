@@ -41,8 +41,9 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         public async Task<IEnumerable<Projects>> GetAllProjectsAsync()
         {
             return await _contextDB.Projects.AsNoTracking().ToListAsync();
+            //return from proj in _contextDB.Projects select new { Id = proj.Id, Header = proj.Header, Files = proj.File };
         }
-
+    
 
         public async Task<Projects> AddProjectAsync(ProjectsAdd project)
         {

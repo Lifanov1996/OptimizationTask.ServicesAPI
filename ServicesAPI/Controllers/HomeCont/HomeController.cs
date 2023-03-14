@@ -4,19 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.Models.Applications;
 using ServicesAPI.Models.Headers;
+using ServicesAPI.Models.Users;
 using System.Net;
 
 namespace ServicesAPI.Controllers.HomeCont
 {
-    [Route("[controller]")]
+    [Route("home")]
     [ApiController]
     public class HomeController : ControllerBase
     {
         private readonly IApplicationClient _appClient;
         private readonly IHeader _header;
-        private readonly ILogger<ContactsController> _logger;
+        private readonly ILogger _logger;
 
-        public HomeController (IApplicationClient applicationCl, IHeader header, ILogger<ContactsController> logger)
+        public HomeController (IApplicationClient applicationCl, IHeader header, ILogger logger)
         {
             _appClient = applicationCl;
             _header = header;
@@ -25,6 +26,10 @@ namespace ServicesAPI.Controllers.HomeCont
         }
 
 
+        /// <summary>
+        /// Получения загаловка главной страници
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(Headers), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Headers>> GetHeaderAsync()
@@ -40,13 +45,18 @@ namespace ServicesAPI.Controllers.HomeCont
         }
 
 
-        [HttpPost]
-        [ProducesResponseType(typeof(ApplicationsClient), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Applications>> PostAppClientAsync(ApplicationsClient data)
+        /// <summary>
+        /// Изменение загаловка
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpPut]
+        public async Task<ActionResult<Headers>> PutHeaderAsync(Headers data)
         {
             try
             {
-                return Ok(await _appClient.AddAppClientAsync(data));
+                return Ok(await _header.UpdateDescrHeaderAsync(data));
             }
             catch (Exception ex)
             {
@@ -55,13 +65,18 @@ namespace ServicesAPI.Controllers.HomeCont
         }
 
 
-        [Authorize]
-        [HttpPut]
-        public async Task<ActionResult<Headers>> PutHeaderAsync(Headers data)
+        /// <summary>
+        /// Отправка заявки
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(ApplicationsClient), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Applications>> PostAppClientAsync(ApplicationsClient data)
         {
             try
             {
-                return Ok(await _header.UpdateDescrHeaderAsync(data));
+                return Ok(await _appClient.AddAppClientAsync(data));
             }
             catch (Exception ex)
             {

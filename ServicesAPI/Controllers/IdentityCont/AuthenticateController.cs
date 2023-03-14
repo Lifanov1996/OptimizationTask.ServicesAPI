@@ -10,18 +10,18 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ServicesAPI.Controllers.Identity
+namespace ServicesAPI.Controllers.IdentityCont
 {
-    [Route("[controller]")]
+    [Route("authenticat")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IToken _token;
-        private readonly ILogger<ContactsController> _logger;
+        private readonly ILogger _logger;
 
-        public AuthenticateController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<ContactsController> logger, IToken tokenGen)
+        public AuthenticateController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger logger, IToken tokenGen)
         {
             _userManager = userManager;
             _roleManager = roleManager;

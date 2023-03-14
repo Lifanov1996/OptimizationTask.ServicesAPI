@@ -31,7 +31,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
                 if (application == null)
                 {
                     _logger.LogWarning($"The database does not have fields with id- {appId}");
-                    throw new Exception("Error 400: Application for this id was not found");
+                    throw new Exception("Error: Application for this id was not found");
                 }
                 return application;
             }
@@ -57,14 +57,14 @@ namespace ServicesAPI.BusinessLogic.Services.Application
                 if(!status.Contains(appCh.StatusApp))
                 {
                     _logger.LogWarning($"Invalid status entered - {appCh.StatusApp}");
-                    throw new Exception($"Error 400: Invalid status entered - {appCh.StatusApp}");
+                    throw new Exception($"Error : Invalid status entered - {appCh.StatusApp}");
                 }
 
                 var application = await _contextDB.Applications.FindAsync(appCh.Id);
                 if(application == null)
                 {
                     _logger.LogWarning($"The database does not have fields with id- {appCh.Id}");
-                    throw new Exception("Error 400: Application for this id was not found");
+                    throw new Exception("Error : Application for this id was not found");
                 }                
 
                 application.StatusApp = appCh.StatusApp;      
