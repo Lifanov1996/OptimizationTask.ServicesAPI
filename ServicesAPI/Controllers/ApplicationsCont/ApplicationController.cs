@@ -69,9 +69,16 @@ namespace ServicesAPI.Controllers.ApplicationsCont
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        public async Task<bool> DeletAsync(int id)
+        public async Task<ActionResult> DeletAsync(int id)
         {
-            return await _appAdmin.DeleteAppAsync(id);
+            try
+            {
+                return Ok(await _appAdmin.DeleteAppAsync(id));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -25,6 +25,11 @@ namespace ServicesAPI.Controllers.ProjectCont
         }
 
 
+        /// <summary>
+        /// Редактировать проект
+        /// </summary>
+        /// <param name="projects"></param>
+        /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(typeof(Projects), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Projects>> ChangeProjectAsync(Projects projects)

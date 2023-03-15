@@ -3,38 +3,39 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.Models.Projects;
+using ServicesAPI.Models.Tidings;
 using ServicesAPI.Models.Users;
 using System.Data;
 using System.Net;
 
-namespace ServicesAPI.Controllers.ProjectCont
+namespace ServicesAPI.Controllers.TidingCont
 {
-    [Route("project")]
+    [Route("tiding")]
     [ApiController]
-    public class ProjectController : ControllerBase
+    public class TidingController : ControllerBase
     {
-        private readonly IProject _project;
+        private readonly ITiding _tiding;
         private readonly ILogger _logger;
 
-        public ProjectController(IProject project, ILogger logger)
+        public TidingController(ITiding tiding, ILogger logger)
         {
-            _project = project;
+            _tiding = tiding;
             _logger = logger;
-            _logger.LogInformation("Init ProjectController");
+            _logger.LogInformation("Init TidingController");
         }
 
 
         /// <summary>
-        /// Получение списка проектов
+        /// Получение списка новостей
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(Projects), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Projects>> GetAllProjectsAsync()
+        [ProducesResponseType(typeof(Tidings), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Tidings>> GetAllTidingsAsync()
         {
             try
             {
-                return Ok(await _project.GetAllProjectsAsync());
+                return Ok(await _tiding.GetAllTidingsAsync());
             }
             catch (Exception ex)
             {
@@ -44,17 +45,17 @@ namespace ServicesAPI.Controllers.ProjectCont
 
 
         /// <summary>
-        /// Полная информация о проекте
+        /// Полная информация о новости
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpGet("{Id}")]
-        [ProducesResponseType(typeof(Projects), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Projects>> GetProjectAsync(int Id)
+        [ProducesResponseType(typeof(Tidings), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Tidings>> GetTidingAsync(int Id)
         {
             try
             {
-                return Ok(await _project.GetProjectAsync(Id));
+                return Ok(await _tiding.GetTidingAsync(Id));
             }
             catch (Exception ex)
             {
@@ -64,18 +65,18 @@ namespace ServicesAPI.Controllers.ProjectCont
 
 
         /// <summary>
-        /// Редактировать проект
+        /// Редактировать новость
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
         [Authorize(Roles = UserRoles.Admin)]
         [HttpPut]
-        [ProducesResponseType(typeof(Projects), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Projects>> GetUpdateProjectAsync(int Id)
+        [ProducesResponseType(typeof(Tidings), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Tidings>> GetUpdateTidingAsync(int Id)
         {
             try
             {
-                return Ok(await _project.GetProjectAsync(Id));
+                return Ok(await _tiding.GetTidingAsync(Id));
             }
             catch (Exception ex)
             {
@@ -85,18 +86,18 @@ namespace ServicesAPI.Controllers.ProjectCont
 
 
         /// <summary>
-        /// Удаление проекта
+        /// Удаление новости
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
         [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{Id}")]
-        [ProducesResponseType(typeof(Projects), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> DeletProjectAsync(int Id)
+        [ProducesResponseType(typeof(Tidings), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> DeletTidingAsync(int Id)
         {
             try
             {
-                return Ok(await _project.DeleteProjectAsync(Id));
+                return Ok(await _tiding.DeleteTidingAsync(Id));
             }
             catch (Exception ex)
             {

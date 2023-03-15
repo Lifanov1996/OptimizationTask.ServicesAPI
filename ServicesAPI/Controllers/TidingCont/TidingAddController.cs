@@ -2,41 +2,40 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAPI.BusinessLogic.Contracts;
-using ServicesAPI.Models.Projects;
+using ServicesAPI.Models.Tidings;
 using ServicesAPI.Models.Users;
-using System.Data;
 using System.Net;
 
-namespace ServicesAPI.Controllers.ProjectCont
+namespace ServicesAPI.Controllers.TidingCont
 {
     [Authorize(Roles = UserRoles.Admin)]
-    [Route("projectadd")]
+    [Route("tidingadd")]
     [ApiController]
-    public class ProjectAddController : ControllerBase
+    public class TidingAddController : ControllerBase
     {
-        private readonly IProject _project;
+        private readonly ITiding _tiding;
         private readonly ILogger _logger;
 
-        public ProjectAddController(IProject project, ILogger logger)
+        public TidingAddController(ITiding tiding, ILogger logger)
         {
-            _project = project;
+            _tiding = tiding;
             _logger = logger;
-            _logger.LogInformation("Init ProjectAddController");
+            _logger.LogInformation("Init TidingAddController");
         }
 
 
         /// <summary>
-        /// Добавление нового проекта
+        /// Добавление новой новости
         /// </summary>
         /// <param name="projectsAdd"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(Projects), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Projects>> AddProjectAsync(ProjectsAdd projectsAdd)
+        [ProducesResponseType(typeof(Tidings), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Tidings>> AddTidingAsync(TidingsAdd tiding)
         {
             try
             {
-                return Ok(await _project.AddProjectAsync(projectsAdd));
+                return Ok(await _tiding.AddTidingAsync(tiding));    
             }
             catch (Exception ex)
             {

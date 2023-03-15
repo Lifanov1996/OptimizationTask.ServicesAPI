@@ -88,6 +88,8 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             {
                 _contextDB.Applications.Remove(application);
                 await _contextDB.SaveChangesAsync();
+
+                _logger.LogInformation($"Remove application: id- {appId}");
                 return true;
             }
             return false;          
