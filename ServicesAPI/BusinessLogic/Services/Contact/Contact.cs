@@ -38,7 +38,7 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
             _model = new Contacts()
             {
                 CompanyAdress = "Москва, ул. Московская, дом 100",
-                CompanyNumber = "8 999 999 99 99",
+                CompanyNumber = "89999999999",
                 CompanyEmail = "mail@mail.ru"
             };
             await _contextDB.Contacts.AddAsync(_model);

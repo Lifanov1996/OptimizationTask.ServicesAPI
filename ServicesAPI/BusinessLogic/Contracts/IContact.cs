@@ -7,21 +7,21 @@ namespace ServicesAPI.BusinessLogic.Contracts
     public interface IContact
     {
         /// <summary>
-        /// Получение контактов
+        /// Получение контактной информации
         /// </summary>
         /// <param name="appId">Номер прокта</param>
         /// <returns></returns>
         Task<Contacts> GetContactAsync();
      
         /// <summary>
-        /// Добавление новости
+        /// Добавление контактной информации
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
         Task<Contacts> AddContactAsync();
 
         /// <summary>
-        /// Изменение новости
+        /// Изменение контактной информации
         /// </summary>
         /// <param name="applications"></param>
         /// <returns></returns>
