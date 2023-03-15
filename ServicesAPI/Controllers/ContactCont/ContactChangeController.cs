@@ -11,9 +11,9 @@ namespace ServicesAPI.Controllers.ContactCont
     public class ContactChangeController : ControllerBase
     {
         private readonly IContact _contact;
-        private readonly ILogger _logger;
+        private readonly ILogger<ContactChangeController> _logger;
 
-        public ContactChangeController(IContact contact, ILogger logger)
+        public ContactChangeController(IContact contact, ILogger<ContactChangeController> logger)
         {
             _contact = contact;
             _logger = logger;

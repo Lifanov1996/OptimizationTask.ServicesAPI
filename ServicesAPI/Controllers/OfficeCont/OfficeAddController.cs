@@ -15,9 +15,9 @@ namespace ServicesAPI.Controllers.OfficeCont
     public class OfficeAddController : ControllerBase
     {
         private readonly IOffice _office;
-        private readonly ILogger _logger;
+        private readonly ILogger<OfficeAddController> _logger;
 
-        public OfficeAddController(IOffice office, ILogger logger)
+        public OfficeAddController(IOffice office, ILogger<OfficeAddController> logger)
         {
             _office = office;
             _logger = logger;

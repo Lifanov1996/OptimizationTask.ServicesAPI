@@ -21,7 +21,15 @@ namespace ServicesAPI.BusinessLogic.Services.Header
 
         public async Task<Headers> GetHeaderAsync()
         {
-            return await _contextDB.Headers.FirstAsync();
+            try
+            {
+                return await _contextDB.Headers.FirstAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Error gte {ex.Message}");
+                throw new Exception(ex.Message);
+            }
         }
 
 

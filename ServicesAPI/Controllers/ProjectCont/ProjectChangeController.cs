@@ -15,9 +15,9 @@ namespace ServicesAPI.Controllers.ProjectCont
     public class ProjectChangeController : ControllerBase
     {
         private readonly IProject _project;
-        private readonly ILogger _logger;
+        private readonly ILogger<ProjectChangeController> _logger;
 
-        public ProjectChangeController(IProject project, ILogger logger)
+        public ProjectChangeController(IProject project, ILogger<ProjectChangeController> logger)
         {
             _project = project;
             _logger = logger;

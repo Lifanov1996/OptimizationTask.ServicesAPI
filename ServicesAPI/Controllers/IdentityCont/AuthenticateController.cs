@@ -19,9 +19,9 @@ namespace ServicesAPI.Controllers.IdentityCont
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IToken _token;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthenticateController> _logger;
 
-        public AuthenticateController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger logger, IToken tokenGen)
+        public AuthenticateController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<AuthenticateController> logger, IToken tokenGen)
         {
             _userManager = userManager;
             _roleManager = roleManager;

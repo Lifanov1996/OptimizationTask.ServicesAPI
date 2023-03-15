@@ -14,9 +14,9 @@ namespace ServicesAPI.Controllers.TidingCont
     public class TidingChangeController : ControllerBase
     {
         private readonly ITiding _tiding;
-        private readonly ILogger _logger;
+        private readonly ILogger<TidingChangeController> _logger;
 
-        public TidingChangeController(ITiding tiding, ILogger logger)
+        public TidingChangeController(ITiding tiding, ILogger<TidingChangeController> logger)
         {
             _tiding = tiding;
             _logger = logger;

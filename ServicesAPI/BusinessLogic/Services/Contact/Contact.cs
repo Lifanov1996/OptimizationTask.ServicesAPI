@@ -25,10 +25,10 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
             {
                 return await _contextDB.Contacts.FirstAsync();
             }
-            catch
+            catch(Exception ex)
             {
-                _logger.LogInformation("Empty table. Adding an example");
-                return await AddContactAsync();
+                _logger.LogError($"Error gte {ex.Message}");
+                throw new Exception(ex.Message);
             }
         }
 

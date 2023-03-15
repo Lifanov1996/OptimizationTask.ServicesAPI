@@ -14,9 +14,9 @@ namespace ServicesAPI.Controllers.ApplicationsCont
     public class ApplicationController : ControllerBase
     {
         private readonly IApplicationAdmin _appAdmin;
-        private readonly ILogger _logger;
+        private readonly ILogger<ApplicationController> _logger;
 
-        public ApplicationController(IApplicationAdmin appAdmin, ILogger logger)
+        public ApplicationController(IApplicationAdmin appAdmin, ILogger<ApplicationController> logger)
         {
             _appAdmin = appAdmin;
             _logger = logger;

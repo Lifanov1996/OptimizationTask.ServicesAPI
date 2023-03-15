@@ -15,9 +15,9 @@ namespace ServicesAPI.Controllers.HomeCont
     {
         private readonly IApplicationClient _appClient;
         private readonly IHeader _header;
-        private readonly ILogger _logger;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController (IApplicationClient applicationCl, IHeader header, ILogger logger)
+        public HomeController (IApplicationClient applicationCl, IHeader header, ILogger<HomeController> logger)
         {
             _appClient = applicationCl;
             _header = header;

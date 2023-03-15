@@ -15,9 +15,9 @@ namespace ServicesAPI.Controllers.ProjectCont
     public class ProjectAddController : ControllerBase
     {
         private readonly IProject _project;
-        private readonly ILogger _logger;
+        private readonly ILogger<ProjectAddController> _logger;
 
-        public ProjectAddController(IProject project, ILogger logger)
+        public ProjectAddController(IProject project, ILogger<ProjectAddController> logger)
         {
             _project = project;
             _logger = logger;
