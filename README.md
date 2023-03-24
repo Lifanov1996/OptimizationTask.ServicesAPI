@@ -15,7 +15,7 @@
 
 - Desktop-приложение
 
-- Telegram-Bot
+- [Telegram-Bot](https://github.com/Lifanov1996/OptimizationTask.TelegramBot)
 
 
 ### ТРЕБОВАНИЯ К ПРОЕТКУ
