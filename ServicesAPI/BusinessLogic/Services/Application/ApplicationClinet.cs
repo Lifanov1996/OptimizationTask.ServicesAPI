@@ -17,28 +17,48 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             _logger.LogInformation("Init ApplicationClinet");
         }
 
-        public async Task<Applications> AddAppClientAsync(ApplicationsClient client)
+        public async Task<Guid> AddAppClientAsync(ApplicationsClient client)
         {
             try
             {
                 _model = new Applications()
                 {
+                    NumberApp = Guid.NewGuid(),
                     DateTimeCreatApp = DateTime.Now,
                     NameClient = client.NameClient,
                     DescriptionApp = client.DescriptionApp,
                     EmailClient = client.EmailClient,
-                    StatusApp = "Получена"               
+                    StatusApp = "Получена"
                 };
-            
+
                 await _contextDB.Applications.AddAsync(_model);
                 await _contextDB.SaveChangesAsync();
 
                 _logger.LogInformation($"Add application id- {_model.Id}");
-                return _model;
+                return _model.NumberApp;
             }
             catch(Exception ex) 
             {
                 _logger.LogError($"Error added application : {ex.Message}");
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<IQueryable> GetAppAsync(string numberApp)
+        {
+            try
+            {
+                var application = _contextDB.Applications.Where(g => g.NumberApp.ToString() == numberApp);
+                if (application == null)
+                {
+                    _logger.LogWarning($"The database does not have fields with numberApp- {numberApp}");
+                    throw new Exception("Error: Application for this id was not found");
+                }
+                return application;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }

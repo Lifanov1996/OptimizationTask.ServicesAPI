@@ -17,6 +17,7 @@ namespace ServicesAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NumberApp = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateTimeCreatApp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NameClient = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DescriptionApp = table.Column<string>(type: "nvarchar(max)", nullable: false),

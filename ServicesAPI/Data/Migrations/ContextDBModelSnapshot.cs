@@ -243,6 +243,9 @@ namespace ServicesAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("NumberApp")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("StatusApp")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

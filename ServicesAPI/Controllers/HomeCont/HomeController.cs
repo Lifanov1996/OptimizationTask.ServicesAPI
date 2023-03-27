@@ -71,12 +71,32 @@ namespace ServicesAPI.Controllers.HomeCont
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(ApplicationsClient), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Applications>> PostAppClientAsync(ApplicationsClient data)
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<ActionResult> PostAppClientAsync(ApplicationsClient data)
         {
             try
             {
-                return Ok(await _appClient.AddAppClientAsync(data));
+                var g = await _appClient.AddAppClientAsync(data);
+                return Ok($"Заявка создана! Номер заявки - {g}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Получения информации по заявке
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{numberApp}")]
+        [ProducesResponseType(typeof(Applications), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetApplicationAsync(string numberApp)
+        {
+            try
+            {
+                return Ok(await _appClient.GetAppAsync(numberApp));
             }
             catch (Exception ex)
             {

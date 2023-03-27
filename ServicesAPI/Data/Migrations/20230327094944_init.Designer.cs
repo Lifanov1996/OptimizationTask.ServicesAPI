@@ -12,7 +12,7 @@ using ServicesAPI.Data.Entity;
 namespace ServicesAPI.Migrations
 {
     [DbContext(typeof(ContextDB))]
-    [Migration("20230313102613_init")]
+    [Migration("20230327094944_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -245,6 +245,9 @@ namespace ServicesAPI.Migrations
                     b.Property<string>("NameClient")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("NumberApp")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("StatusApp")
                         .IsRequired()
