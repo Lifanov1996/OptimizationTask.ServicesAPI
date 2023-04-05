@@ -44,11 +44,11 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             }
         }
 
-        public async Task<IQueryable> GetAppAsync(string numberApp)
+        public async Task<Applications> GetAppAsync(string numberApp)
         {
             try
             {
-                var application = _contextDB.Applications.Where(g => g.NumberApp.ToString() == numberApp);
+                var application = (Applications) _contextDB.Applications.Where(g => g.NumberApp.ToString() == numberApp).Single();
                 if (application == null)
                 {
                     _logger.LogWarning($"The database does not have fields with numberApp- {numberApp}");

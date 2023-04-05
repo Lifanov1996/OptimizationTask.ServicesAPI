@@ -10,6 +10,7 @@ using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.BusinessLogic.Services.Application;
 using ServicesAPI.BusinessLogic.Services.Contact;
 using ServicesAPI.BusinessLogic.Services.Header;
+using ServicesAPI.BusinessLogic.Services.Image;
 using ServicesAPI.BusinessLogic.Services.News;
 using ServicesAPI.BusinessLogic.Services.Office;
 using ServicesAPI.BusinessLogic.Services.Proejct;
@@ -18,6 +19,7 @@ using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Users;
 using System;
 using System.Data;
+using System.Drawing;
 using System.Text;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -50,6 +52,7 @@ try
     builder.Services.AddScoped<IContact, Contact>();
     builder.Services.AddScoped<ITiding, Tiding>();
     builder.Services.AddScoped<IToken, Token>();
+    builder.Services.AddScoped<IImage, ServicesAPI.BusinessLogic.Services.Image.Image>();
 
 
     //Identity

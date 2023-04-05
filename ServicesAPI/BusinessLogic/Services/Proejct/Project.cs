@@ -9,10 +9,12 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
     public class Project : IProject
     {
         private readonly ContextDB _contextDB;
+        private readonly IImage _image;
         private ILogger<Project> _logger;
 
-        public Project(ContextDB contextDB, ILogger<Project> logger)
+        public Project(ContextDB contextDB, ILogger<Project> logger, IImage image)
         {
+            _image = image;
             _contextDB = contextDB;
             _logger = logger;
             _logger.LogInformation("Init Project");
@@ -49,7 +51,15 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         {
             try
             {
-                Projects model = new Projects { Header = project.Header, File = project.File, Description = project.Description };
+                string nameImage = null;
+                if(project.Image != null)
+                {
+                    nameImage = await _image.AddImageAsync(project.Image);
+                }
+                Projects model = new Projects { Header = project.Header,
+                                                NameImage = nameImage,
+                                                UrlImage = project.UrlImage,
+                                                Description = project.Description };
                 await _contextDB.Projects.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
                 
@@ -88,6 +98,8 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
             if (project != null)
             {
                 _contextDB.Projects.Remove(project);
+                var res = await _image.DeletImageAsync(project.NameImage);
+
                 await _contextDB.SaveChangesAsync();
 
                 _logger.LogInformation($"Remove project: id- {prId}");

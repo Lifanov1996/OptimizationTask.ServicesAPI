@@ -8,11 +8,13 @@ namespace ServicesAPI.BusinessLogic.Services.News
 {
     public class Tiding : ITiding
     {
+        private readonly IImage _image;
         private readonly ContextDB _contextDB;
         private ILogger<Tiding> _logger;
 
-        public Tiding(ContextDB contextDB, ILogger<Tiding> logger) 
+        public Tiding(ContextDB contextDB, ILogger<Tiding> logger, IImage image) 
         {
+            _image = image;
             _contextDB = contextDB;
             _logger = logger;
             _logger.LogInformation("Inir Tiding");
@@ -49,12 +51,17 @@ namespace ServicesAPI.BusinessLogic.Services.News
         {
             try
             {
-                Tidings model = new Tidings()
+                string nameImage = null;
+                if (tid.Image != null)
                 {
-                    DateTimePublication = DateTime.Now,
-                    Header = tid.Header,
-                    Description = tid.Description,
-                    File = tid.File
+                    nameImage = await _image.AddImageAsync(tid.Image);
+                }
+                Tidings model = new Tidings() { DateTimePublication = DateTime.Now,
+                                                Header = tid.Header,
+                                                NameImage = nameImage,
+                                                UrlImage = tid.UrlImage,
+                                                Description = tid.Description,
+                                              
                 };
 
                 await _contextDB.Tidings.AddAsync(model);
@@ -95,6 +102,8 @@ namespace ServicesAPI.BusinessLogic.Services.News
             if (result != null)
             {
                 _contextDB.Tidings.Remove(result);
+                var res = await _image.DeletImageAsync(result.NameImage);
+
                 await _contextDB.SaveChangesAsync();
 
                 _logger.LogInformation($"Remove tiding: id- {tidId}");

@@ -38,6 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Image\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 </Project>

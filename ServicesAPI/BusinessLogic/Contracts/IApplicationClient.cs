@@ -18,6 +18,6 @@ namespace ServicesAPI.BusinessLogic.Contracts
         /// </summary>
         /// <param name="numberApp"></param>
         /// <returns></returns>
-        Task<IQueryable> GetAppAsync(string numberApp);
+        Task<Applications> GetAppAsync(string numberApp);
     }
 }
