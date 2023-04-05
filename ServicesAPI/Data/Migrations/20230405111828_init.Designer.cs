@@ -12,7 +12,7 @@ using ServicesAPI.Data.Entity;
 namespace ServicesAPI.Migrations
 {
     [DbContext(typeof(ContextDB))]
-    [Migration("20230327094944_init")]
+    [Migration("20230405111828_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -349,12 +349,14 @@ namespace ServicesAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("File")
+                    b.Property<string>("Header")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Header")
-                        .IsRequired()
+                    b.Property<string>("NameImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UrlImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -377,11 +379,15 @@ namespace ServicesAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("File")
+                    b.Property<string>("Header")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Header")
+                    b.Property<string>("NameImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UrlImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

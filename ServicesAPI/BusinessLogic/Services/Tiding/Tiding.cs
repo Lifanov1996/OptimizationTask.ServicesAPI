@@ -52,17 +52,17 @@ namespace ServicesAPI.BusinessLogic.Services.News
             try
             {
                 string nameImage = null;
+                string urlImage = null;
                 if (tid.Image != null)
                 {
                     nameImage = await _image.AddImageAsync(tid.Image);
+                    urlImage = "https://localhost:7297" + nameImage;
                 }
                 Tidings model = new Tidings() { DateTimePublication = DateTime.Now,
                                                 Header = tid.Header,
                                                 NameImage = nameImage,
-                                                UrlImage = tid.UrlImage,
-                                                Description = tid.Description,
-                                              
-                };
+                                                UrlImage = urlImage?? tid.UrlImage,
+                                                Description = tid.Description };
 
                 await _contextDB.Tidings.AddAsync(model);
                 await _contextDB.SaveChangesAsync();

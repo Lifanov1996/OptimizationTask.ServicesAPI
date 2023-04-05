@@ -25,7 +25,7 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         {
             try
             {
-                var project = await _contextDB.Projects.FindAsync(prId);      
+                var project =await _contextDB.Projects.FindAsync(prId);      
                 if (project == null)
                 {
                     _logger.LogWarning($"The database does not have fields with id- {prId}");
@@ -42,8 +42,7 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
 
         public async Task<IEnumerable<Projects>> GetAllProjectsAsync()
         {
-            return await _contextDB.Projects.AsNoTracking().ToListAsync();
-            //return from proj in _contextDB.Projects select new { Id = proj.Id, Header = proj.Header, Files = proj.File };
+            return await _contextDB.Projects.AsNoTracking().ToListAsync();          
         }
     
 
@@ -52,14 +51,17 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
             try
             {
                 string nameImage = null;
+                string urlImage = null;
                 if(project.Image != null)
                 {
                     nameImage = await _image.AddImageAsync(project.Image);
+                    urlImage = "https://localhost:7297" + nameImage;
                 }
                 Projects model = new Projects { Header = project.Header,
                                                 NameImage = nameImage,
-                                                UrlImage = project.UrlImage,
+                                                UrlImage = urlImage?? project.UrlImage,
                                                 Description = project.Description };
+
                 await _contextDB.Projects.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
                 
