@@ -15,7 +15,7 @@ namespace ServicesAPI.BusinessLogic.Services.Header
         {
             _contextDB = contextDB;
             _logger = logger;
-            _logger.LogInformation("Init Header");
+            _logger.LogInformation("Инициализирован Header");
         }
 
 
@@ -27,8 +27,8 @@ namespace ServicesAPI.BusinessLogic.Services.Header
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error gte {ex.Message}");
-                throw new Exception(ex.Message);
+                _logger.LogError(ex.Message);
+                throw new Exception("Ошибка загрузки");
             }
         }
 
@@ -37,16 +37,22 @@ namespace ServicesAPI.BusinessLogic.Services.Header
         {
             try
             {
+                var isData = await _contextDB.Headers.SingleOrDefaultAsync();
+                if(isData != null)
+                {
+                    _logger.LogError("Добавление второго заголовка");
+                    throw new Exception("Заголовок уже добавлен! Измените существующий заголовок");
+                }
                 Headers model = new Headers { Descriotion = header.Descriotion };
                 await _contextDB.Headers.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Added header");
+                _logger.LogInformation($"Добавлен заголовок главной странице");
                 return model;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error added {ex.Message}");
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -56,16 +62,23 @@ namespace ServicesAPI.BusinessLogic.Services.Header
         {
             try
             {
-                _contextDB.Headers.Update(header);
+                var isData = await _contextDB.Headers.FindAsync(header.Id);
+                if(isData == null)
+                {
+                    throw new Exception("Ошибка изменения! Заголовок не найден");
+                }
+
+                isData.Descriotion = header.Descriotion;
+                //_contextDB.Headers.Update(header);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation("Update header");
+                _logger.LogInformation("Изменен заголовок главной страницы");
                 return header;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error update header: {ex.Message}");
-                throw new Exception(ex.Message);
+                _logger.LogError(ex.Message);
+                throw new Exception("Ошибка изменения заголовка");
             }
         }
 
@@ -78,7 +91,7 @@ namespace ServicesAPI.BusinessLogic.Services.Header
                 _contextDB.Headers.Remove(head);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Remove header");
+                _logger.LogInformation($"Заголовок главной странице удален");
                 return true;
             }
             return false;
