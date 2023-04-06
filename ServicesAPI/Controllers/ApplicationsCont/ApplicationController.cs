@@ -20,7 +20,7 @@ namespace ServicesAPI.Controllers.ApplicationsCont
         {
             _appAdmin = appAdmin;
             _logger = logger;
-            _logger.LogInformation("Init ApplicationController");
+            _logger.LogInformation("Инициализирован ApplicationController");
         }
 
 
@@ -73,7 +73,8 @@ namespace ServicesAPI.Controllers.ApplicationsCont
         {
             try
             {
-                return Ok(await _appAdmin.DeleteAppAsync(id));
+                await _appAdmin.DeleteAppAsync(id);
+                return Ok($"Заявка номер - {id} удалена!");
             }
             catch(Exception ex)
             {

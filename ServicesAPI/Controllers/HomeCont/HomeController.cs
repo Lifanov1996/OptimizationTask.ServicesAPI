@@ -22,7 +22,7 @@ namespace ServicesAPI.Controllers.HomeCont
             _appClient = applicationCl;
             _header = header;
             _logger = logger;
-            _logger.LogInformation("Init HomeController");
+            _logger.LogInformation("Инициализирован HomeController");
         }
 
 

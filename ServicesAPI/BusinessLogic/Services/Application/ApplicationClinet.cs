@@ -1,4 +1,5 @@
-﻿using ServicesAPI.BusinessLogic.Contracts;
+﻿using Microsoft.EntityFrameworkCore;
+using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Applications;
 
@@ -14,7 +15,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         {
             _contextDB = contextDB;
             _logger = logger;
-            _logger.LogInformation("Init ApplicationClinet");
+            _logger.LogInformation("Инициализирован ApplicationClinet");
         }
 
         public async Task<Guid> AddAppClientAsync(ApplicationsClient client)
@@ -34,12 +35,12 @@ namespace ServicesAPI.BusinessLogic.Services.Application
                 await _contextDB.Applications.AddAsync(_model);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Add application id- {_model.Id}");
+                _logger.LogInformation($"Создана заявка, номер - {_model.Id}");
                 return _model.NumberApp;
             }
             catch(Exception ex) 
             {
-                _logger.LogError($"Error added application : {ex.Message}");
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -48,14 +49,14 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         {
             try
             {
-                var application = (Applications) _contextDB.Applications.Where(g => g.NumberApp.ToString() == numberApp).Single();
-                if (application == null)
+                var application = await _contextDB.Applications.Where(g => g.NumberApp.ToString() == numberApp).SingleOrDefaultAsync();   
+                if( application == null )
                 {
-                    _logger.LogWarning($"The database does not have fields with numberApp- {numberApp}");
-                    throw new Exception("Error: Application for this id was not found");
+                    _logger.LogInformation($"Запрос на заявку с номером - {numberApp}. Заявка не найдена");
+                    throw new Exception($"Заявка с номер - {numberApp} не найдена. Проверте номер заявки!");
                 }
                 return application;
-            }
+            }           
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);

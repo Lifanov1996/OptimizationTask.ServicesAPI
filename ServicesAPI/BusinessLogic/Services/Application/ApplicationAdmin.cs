@@ -19,7 +19,7 @@ namespace ServicesAPI.BusinessLogic.Services.Application
         {
             _contextDB = contextDB;
             _logger = logger;
-            _logger.LogInformation("Init ApplicationAdmin");
+            _logger.LogInformation("Инициализирован ApplicationAdmin");
         }
 
 
@@ -30,14 +30,13 @@ namespace ServicesAPI.BusinessLogic.Services.Application
                 var application =  await _contextDB.Applications.FindAsync(appId);
                 if (application == null)
                 {
-                    _logger.LogWarning($"The database does not have fields with id- {appId}");
-                    throw new Exception("Error: Application for this id was not found");
+                    throw new Exception($"Заявка с номером  - {appId} не найдена. Проверте номер заяки!");
                 }
                 return application;
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError($"Запрос зявки с номером - {appId}. Заявка не найдена!");
                 throw new Exception(ex.Message);
             }
         }
@@ -56,21 +55,21 @@ namespace ServicesAPI.BusinessLogic.Services.Application
             {
                 if(!status.Contains(appCh.StatusApp))
                 {
-                    _logger.LogWarning($"Invalid status entered - {appCh.StatusApp}");
-                    throw new Exception($"Error : Invalid status entered - {appCh.StatusApp}");
+                    _logger.LogWarning($"Введен не валидный статус - {appCh.StatusApp}, заявка {appCh.Id}");
+                    throw new Exception($"Статус заявки - {appCh.Id} не изменен : введен не валидный статус - {appCh.StatusApp}");
                 }
 
                 var application = await _contextDB.Applications.FindAsync(appCh.Id);
                 if(application == null)
                 {
-                    _logger.LogWarning($"The database does not have fields with id- {appCh.Id}");
-                    throw new Exception("Error : Application for this id was not found");
+                    _logger.LogWarning($"Запрос зявки с номером - {appCh.Id}. Заявка не найдена!");
+                    throw new Exception($"Заявка с номером  - {appCh.Id} не найдена. Проверте номер заяки!");
                 }                
 
                 application.StatusApp = appCh.StatusApp;      
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Update status in application id- {appCh.Id}");
+                _logger.LogInformation($"Измене статус заявки - {appCh.Id} на {appCh.StatusApp}");
                 return application;
             }
             catch(Exception ex)
@@ -83,16 +82,25 @@ namespace ServicesAPI.BusinessLogic.Services.Application
 
         public async Task<bool> DeleteAppAsync(int appId)
         {
-            var application = await _contextDB.Applications.SingleOrDefaultAsync(x => x.Id == appId);
-            if(application != null) 
+            try
             {
-                _contextDB.Applications.Remove(application);
-                await _contextDB.SaveChangesAsync();
+                var application = await _contextDB.Applications.SingleOrDefaultAsync(x => x.Id == appId);
+                if(application != null) 
+                {
+                    _contextDB.Applications.Remove(application);
+                    await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Remove application: id- {appId}");
-                return true;
+                    _logger.LogInformation($"Удалена заявка с номером - {appId}");
+                    return true;
+                }
+                _logger.LogWarning($"Удаление зявки с номером - {appId}. Заявка не найдена!");
+                throw new Exception($"Заявка с номером  - {appId} не найдена. Проверте номер заяки!");                       
             }
-            return false;          
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
