@@ -20,7 +20,7 @@ namespace ServicesAPI.Controllers.ProjectCont
         {
             _project = project;
             _logger = logger;
-            _logger.LogInformation("Init ProjectController");
+            _logger.LogInformation("Инициализирован ProjectController");
         }
 
 
@@ -91,12 +91,13 @@ namespace ServicesAPI.Controllers.ProjectCont
         /// <returns></returns>
         [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{Id}")]
-        [ProducesResponseType(typeof(Projects), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult> DeletProjectAsync(int Id)
         {
             try
             {
-                return Ok(await _project.DeleteProjectAsync(Id));
+                await _project.DeleteProjectAsync(Id);
+                return Ok($"Проект номер - {Id} удален!");
             }
             catch (Exception ex)
             {

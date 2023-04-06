@@ -17,7 +17,7 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
             _image = image;
             _contextDB = contextDB;
             _logger = logger;
-            _logger.LogInformation("Init Project");
+            _logger.LogInformation("Инициализация Project");
         }
 
 
@@ -25,11 +25,11 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         {
             try
             {
-                var project =await _contextDB.Projects.FindAsync(prId);      
+                var project = await _contextDB.Projects.FindAsync(prId);      
                 if (project == null)
                 {
-                    _logger.LogWarning($"The database does not have fields with id- {prId}");
-                    throw new Exception("Error: Project for this id was not found");
+                    _logger.LogWarning($"Запрос на проект с номером - {prId}. Проект не найдена");
+                    throw new Exception("Проект не найден");
                 }
                 return project;               
             }
@@ -50,13 +50,21 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         {
             try
             {
+                if(project.Image == null && project.UrlImage== null)
+                {
+                    throw new Exception("Изображение не загруженно! Добавьте изображение или url- изображения.");
+                }
+
                 string nameImage = null;
                 string urlImage = null;
+
                 if(project.Image != null)
                 {
                     nameImage = await _image.AddImageAsync(project.Image);
                     urlImage = "https://localhost:7297" + nameImage;
+                    _logger.LogInformation($"Загружен файл - {project.Image.FileName}");
                 }
+
                 Projects model = new Projects { Header = project.Header,
                                                 NameImage = nameImage,
                                                 UrlImage = urlImage?? project.UrlImage,
@@ -65,12 +73,12 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
                 await _contextDB.Projects.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
                 
-                _logger.LogInformation($"Add project id- {model.Id}");
+                _logger.LogInformation($"Добавлен новый проект - {model.Id}");
                 return model;
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error added project - {ex.Message}");
+                _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -80,10 +88,33 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         {
             try
             {
-                _contextDB.Projects.Update(project);
+                var isData = await _contextDB.Projects.FindAsync(project.Id);
+                if (isData == null)
+                {
+                    throw new Exception("Проект не найден");
+                }
+
+                isData.Header = project.Header;
+
+                if(isData.NameImage != null)
+                {
+                    await _image.DeletImageAsync(isData.NameImage);
+                }
+
+                isData.NameImage = project.NameImage;
+
+                string urlImage = null;
+                if (project.NameImage != null)
+                {
+                    urlImage = "https://localhost:7297" + project.NameImage;
+                    _logger.LogInformation($"Загружен файл - {project.NameImage}");
+                }
+                isData.UrlImage = urlImage?? project.UrlImage;
+                isData.Description = project.Description;
+
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Updated project app: {project.Id}");
+                _logger.LogInformation($"Изменен проект - {project.Id}");
                 return project;
             }
             catch(Exception ex)
@@ -96,18 +127,35 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
 
         public async Task<bool> DeleteProjectAsync(int prId)
         {
-            var project = await _contextDB.Projects.SingleOrDefaultAsync(x => x.Id == prId);
-            if (project != null)
-            {
+            try
+            {             
+                var project = await _contextDB.Projects.FindAsync(prId);
+
+                if (project == null)
+                {
+                    _logger.LogInformation($"Запрос на удаление проекта - {prId}. Проект не был найден.");
+                    throw new Exception("Проект не найден. Ошибка удаления.");
+                }
+               
                 _contextDB.Projects.Remove(project);
-                var res = await _image.DeletImageAsync(project.NameImage);
+
+                if(project.NameImage != null)
+                {
+                    await _image.DeletImageAsync(project.NameImage);
+                    _logger.LogInformation($"Удален файл - {project.NameImage}");
+                }
 
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Remove project: id- {prId}");
+                _logger.LogInformation($"Удален проект - {prId}");
                 return true;
+                
             }
-            return false;
+            catch(Exception ex )
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

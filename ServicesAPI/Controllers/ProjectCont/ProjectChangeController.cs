@@ -21,7 +21,7 @@ namespace ServicesAPI.Controllers.ProjectCont
         {
             _project = project;
             _logger = logger;
-            _logger.LogInformation("Init ProjectChangeController");
+            _logger.LogInformation("Инициализация ProjectChangeController");
         }
 
 
