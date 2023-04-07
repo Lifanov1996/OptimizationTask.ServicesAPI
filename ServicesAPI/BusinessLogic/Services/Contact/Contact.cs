@@ -16,7 +16,7 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
         {
             _contextDB = contextDB;
             _logger = logger;
-            _logger.LogInformation("Init Contact");
+            _logger.LogInformation("Инициализирован Contact");
         }
 
         public async Task<Contacts> GetContactAsync()
@@ -27,8 +27,8 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error gte {ex.Message}");
-                throw new Exception(ex.Message);
+                _logger.LogError(ex.Message);
+                throw new Exception("Ошибка загрузки контактной информации");
             }
         }
 
@@ -51,10 +51,15 @@ namespace ServicesAPI.BusinessLogic.Services.Contact
         {
             try
             {
+                var isData = await _contextDB.Contacts.AnyAsync(x => x.Id == cont.Id);
+                if (!isData)
+                {
+                    throw new Exception("Ошибка изменения контактной информации");
+                }
                 _contextDB.Contacts.Update(cont);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Contact updated: {cont}");
+                _logger.LogInformation($"Изменена контакная информация");
                 return cont;
             }
             catch(Exception ex)

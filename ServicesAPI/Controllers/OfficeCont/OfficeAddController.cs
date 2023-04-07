@@ -21,7 +21,7 @@ namespace ServicesAPI.Controllers.OfficeCont
         {
             _office = office;
             _logger = logger;
-            _logger.LogInformation("Init OfficeAddController");
+            _logger.LogInformation("Инициализирован OfficeAddController");
         }
 
 
@@ -30,7 +30,7 @@ namespace ServicesAPI.Controllers.OfficeCont
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>        
-        [HttpPut]
+        [HttpPost]
         [ProducesResponseType(typeof(Offices), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Offices>> AddOfficeAsync(OfficesAdd offices)
         {

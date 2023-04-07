@@ -20,7 +20,7 @@ namespace ServicesAPI.Controllers.OfficeCont
         {
             _office = office;
             _logger = logger;
-            _logger.LogInformation("Init OfficeController");
+            _logger.LogInformation("Инициализирован OfficeController");
         }
 
 
@@ -76,7 +76,8 @@ namespace ServicesAPI.Controllers.OfficeCont
         {
             try
             {
-                return Ok(await _office.DeleteOfficeAsync(Id));
+                await _office.DeleteOfficeAsync(Id);
+                return Ok($"Услуга - {Id} удалена.");
             }
             catch (Exception ex)
             {

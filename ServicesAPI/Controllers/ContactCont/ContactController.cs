@@ -19,7 +19,7 @@ namespace ServicesAPI.Controllers.ContactCont
         {
             _contact = contact;
             _logger = logger;
-            _logger.LogInformation("Init ContactController");
+            _logger.LogInformation("Инициализирован ContactController");
         }
 
 
@@ -31,27 +31,6 @@ namespace ServicesAPI.Controllers.ContactCont
         [HttpGet]
         [ProducesResponseType(typeof(Contacts), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Contacts>> GetContactAsync()
-        {
-            try
-            {
-                return Ok(await _contact.GetContactAsync());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-
-        /// <summary>
-        /// Редактирование контактов
-        /// </summary>
-        /// <param name="Id"></param>
-        /// <returns></returns>
-        [Authorize(Roles = UserRoles.Admin)]
-        [HttpPut]
-        [ProducesResponseType(typeof(Contacts), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Contacts>> GetUpdateContactAsync()
         {
             try
             {

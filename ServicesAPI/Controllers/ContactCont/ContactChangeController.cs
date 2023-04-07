@@ -17,7 +17,7 @@ namespace ServicesAPI.Controllers.ContactCont
         {
             _contact = contact;
             _logger = logger;
-            _logger.LogInformation("Init ContactChangeController");
+            _logger.LogInformation("Инициализирован ContactChangeController");
         }
 
 

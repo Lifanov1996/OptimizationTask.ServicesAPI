@@ -15,7 +15,7 @@ namespace ServicesAPI.BusinessLogic.Services.Office
         {
             _contextDB = contextDB;
             _logger = logger;
-            _logger.LogInformation("Init Office");
+            _logger.LogInformation("Инициализирован Office");
         }
 
 
@@ -26,8 +26,8 @@ namespace ServicesAPI.BusinessLogic.Services.Office
                 var office = await _contextDB.Offices.FindAsync(offId);
                 if (office == null)
                 {
-                    _logger.LogWarning($"The database does not have fields with id- {offId}");
-                    throw new Exception("Error: Office for this id was not found");
+                    _logger.LogWarning($"Запрос на услугу - {offId}. Услуга не найдена");
+                    throw new Exception("Услуга не найдена.");
                 }
                 return office;
             }
@@ -49,11 +49,13 @@ namespace ServicesAPI.BusinessLogic.Services.Office
         {
             try
             {
-                Offices model = new Offices { Header= office.Header, Description = office.Description };
+                Offices model = new Offices { Header = office.Header, 
+                                              Description = office.Description };
+
                 await _contextDB.Offices.AddAsync(model);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Added office id- {model.Id}");
+                _logger.LogInformation($"Добавлена услуга - {model.Id}");
                 return model;
             }
             catch(Exception ex)
@@ -67,11 +69,17 @@ namespace ServicesAPI.BusinessLogic.Services.Office
         public async Task<Offices> UpdateOfficeAsync(Offices office)
         {
             try
-            {               
+            {   
+                var isData = await _contextDB.Offices.AnyAsync(x => x.Id == office.Id);
+                if (!isData) 
+                {
+                    throw new Exception("Услуга не найдена.");
+                }
+
                 _contextDB.Offices.Update(office);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Update office id- {office.Id}");
+                _logger.LogInformation($"Изменена услуга - {office.Id}");
                 return office;
             }
             catch(Exception ex)
@@ -84,16 +92,25 @@ namespace ServicesAPI.BusinessLogic.Services.Office
 
         public async Task<bool> DeleteOfficeAsync(int offId)
         {
-            var office = await _contextDB.Offices.SingleOrDefaultAsync(x => x.Id == offId);
-            if (office != null)
+            try
             {
+                var office = await _contextDB.Offices.FindAsync(offId);
+                if (office == null)
+                {
+                    throw new Exception("Услуга не найдена.");
+                }
+                
                 _contextDB.Offices.Remove(office);
                 await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Remove office: id- {offId}");
-                return true;
+                _logger.LogInformation($"Удалена услуга - {offId}");
+                return true;     
             }
-            return false;
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

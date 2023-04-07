@@ -21,7 +21,7 @@ namespace ServicesAPI.Controllers.OfficeCont
         {
             _office = office;
             _logger = logger;
-            _logger.LogInformation("Init OfficeChangeController");
+            _logger.LogInformation("Инициализирован OfficeChangeController");
         }
 
 

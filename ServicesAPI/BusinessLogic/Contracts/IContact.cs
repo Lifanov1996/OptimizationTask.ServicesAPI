@@ -1,6 +1,4 @@
-﻿
-
-using ServicesAPI.Models.Contacts;
+﻿using ServicesAPI.Models.Contacts;
 
 namespace ServicesAPI.BusinessLogic.Contracts
 {
