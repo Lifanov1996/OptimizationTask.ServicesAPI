@@ -28,7 +28,7 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
                 var project = await _contextDB.Projects.FindAsync(prId);      
                 if (project == null)
                 {
-                    _logger.LogWarning($"Запрос на проект с номером - {prId}. Проект не найдена");
+                    _logger.LogWarning($"Запрос на проект - {prId}. Проект не найдена");
                     throw new Exception("Проект не найден");
                 }
                 return project;               
@@ -92,6 +92,11 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
                 if (isData == null)
                 {
                     throw new Exception("Проект не найден");
+                }
+
+                if (project.NameImage == null && project.UrlImage == null)
+                {
+                    throw new Exception("Изображение не загруженно! Добавьте изображение или url- изображения.");
                 }
 
                 isData.Header = project.Header;

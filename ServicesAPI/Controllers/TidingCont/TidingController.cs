@@ -21,7 +21,7 @@ namespace ServicesAPI.Controllers.TidingCont
         {
             _tiding = tiding;
             _logger = logger;
-            _logger.LogInformation("Init TidingController");
+            _logger.LogInformation("Инициализирован TidingController");
         }
 
 
@@ -30,7 +30,7 @@ namespace ServicesAPI.Controllers.TidingCont
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(Tidings), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<Tidings>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Tidings>> GetAllTidingsAsync()
         {
             try
@@ -92,12 +92,13 @@ namespace ServicesAPI.Controllers.TidingCont
         /// <returns></returns>
         [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{Id}")]
-        [ProducesResponseType(typeof(Tidings), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult> DeletTidingAsync(int Id)
         {
             try
             {
-                return Ok(await _tiding.DeleteTidingAsync(Id));
+                await _tiding.DeleteTidingAsync(Id);
+                return Ok($"Новость - {Id} удален!");
             }
             catch (Exception ex)
             {

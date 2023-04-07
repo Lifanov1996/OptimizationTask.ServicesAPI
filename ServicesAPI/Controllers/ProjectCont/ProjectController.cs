@@ -97,7 +97,7 @@ namespace ServicesAPI.Controllers.ProjectCont
             try
             {
                 await _project.DeleteProjectAsync(Id);
-                return Ok($"Проект номер - {Id} удален!");
+                return Ok($"Проект - {Id} удален!");
             }
             catch (Exception ex)
             {

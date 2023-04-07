@@ -20,7 +20,7 @@ namespace ServicesAPI.Controllers.TidingCont
         {
             _tiding = tiding;
             _logger = logger;
-            _logger.LogInformation("Init TidingAddController");
+            _logger.LogInformation("Инициализирован TidingAddController");
         }
 
 

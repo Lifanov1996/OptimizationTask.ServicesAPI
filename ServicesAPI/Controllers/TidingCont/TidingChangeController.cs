@@ -9,7 +9,7 @@ using System.Net;
 namespace ServicesAPI.Controllers.TidingCont
 {
     [Authorize(Roles = UserRoles.Admin)]
-    [Route("api/[controller]")]
+    [Route("tidingchange")]
     [ApiController]
     public class TidingChangeController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace ServicesAPI.Controllers.TidingCont
         {
             _tiding = tiding;
             _logger = logger;
-            _logger.LogInformation("Init TidingChangeController");
+            _logger.LogInformation("Инициализирован TidingChangeController");
         }
 
 
