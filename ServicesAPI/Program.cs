@@ -42,6 +42,8 @@ try
     var connectionString = builder.Configuration.GetConnectionString("ConnectionMSSQLServer");
     builder.Services.AddDbContext<ContextDB>(options => options.UseSqlServer(connectionString));
 
+    //Cache
+    builder.Services.AddMemoryCache();
 
     //Dependencies
     builder.Services.AddScoped<IApplicationClient, ApplicationClinet>();

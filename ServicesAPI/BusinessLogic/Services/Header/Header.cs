@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Applications;
@@ -11,7 +12,7 @@ namespace ServicesAPI.BusinessLogic.Services.Header
         private readonly ContextDB _contextDB;
         private ILogger<Header> _logger;
 
-        public Header(ContextDB contextDB, ILogger<Header> logger)
+        public Header(ContextDB contextDB, ILogger<Header> logger, IMemoryCache memoryCache)
         {
             _contextDB = contextDB;
             _logger = logger;

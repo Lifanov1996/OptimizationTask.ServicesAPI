@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using ServicesAPI.BusinessLogic.Contracts;
+using ServicesAPI.BusinessLogic.Services.Office;
 using ServicesAPI.Data.Entity;
+using ServicesAPI.Models.Offices;
 using ServicesAPI.Models.Projects;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -11,12 +14,14 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         private readonly ContextDB _contextDB;
         private readonly IImage _image;
         private ILogger<Project> _logger;
+        private readonly IMemoryCache _cache;
 
-        public Project(ContextDB contextDB, ILogger<Project> logger, IImage image)
+        public Project(ContextDB contextDB, ILogger<Project> logger, IImage image, IMemoryCache memoryCache)
         {
             _image = image;
             _contextDB = contextDB;
             _logger = logger;
+            _cache = memoryCache;
             _logger.LogInformation("Инициализация Project");
         }
 
@@ -25,11 +30,17 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         {
             try
             {
-                var project = await _contextDB.Projects.FindAsync(prId);      
-                if (project == null)
+                Projects project = null;
+                if(!_cache.TryGetValue(prId, out project))
                 {
-                    _logger.LogWarning($"Запрос на проект - {prId}. Проект не найдена");
-                    throw new Exception("Проект не найден");
+                    project = await _contextDB.Projects.FindAsync(prId);      
+
+                    if (project == null)
+                    {
+                        _logger.LogWarning($"Запрос на проект - {prId}. Проект не найдена");
+                        throw new Exception("Проект не найден");
+                    }
+                    _cache.Set(project.Id, project, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
                 }
                 return project;               
             }
@@ -46,11 +57,11 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
         }
     
 
-        public async Task<Projects> AddProjectAsync(ProjectsAdd project)
+        public async Task<Projects> AddProjectAsync(ProjectsAdd projectAdd)
         {
             try
             {
-                if(project.Image == null && project.UrlImage== null)
+                if(projectAdd.Image == null && projectAdd.UrlImage== null)
                 {
                     throw new Exception("Изображение не загруженно! Добавьте изображение или url- изображения.");
                 }
@@ -58,23 +69,28 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
                 string nameImage = null;
                 string urlImage = null;
 
-                if(project.Image != null)
+                if(projectAdd.Image != null)
                 {
-                    nameImage = await _image.AddImageAsync(project.Image);
+                    nameImage = await _image.AddImageAsync(projectAdd.Image);
                     urlImage = "https://localhost:7297" + nameImage;
-                    _logger.LogInformation($"Загружен файл - {project.Image.FileName}");
+                    _logger.LogInformation($"Загружен файл - {projectAdd.Image.FileName}");
                 }
 
-                Projects model = new Projects { Header = project.Header,
+                Projects project = new Projects { Header = projectAdd.Header,
                                                 NameImage = nameImage,
-                                                UrlImage = urlImage?? project.UrlImage,
-                                                Description = project.Description };
+                                                UrlImage = urlImage?? projectAdd.UrlImage,
+                                                Description = projectAdd.Description };
 
-                await _contextDB.Projects.AddAsync(model);
-                await _contextDB.SaveChangesAsync();
-                
-                _logger.LogInformation($"Добавлен новый проект - {model.Id}");
-                return model;
+                await _contextDB.Projects.AddAsync(project);
+                int isResult = await _contextDB.SaveChangesAsync();
+
+                if (isResult > 0)
+                {
+                    _cache.Set(project.Id, project, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
+                }
+
+                _logger.LogInformation($"Добавлен новый проект - {project.Id}");
+                return project;
             }
             catch(Exception ex)
             {
@@ -117,7 +133,12 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
                 isData.UrlImage = urlImage?? project.UrlImage;
                 isData.Description = project.Description;
 
-                await _contextDB.SaveChangesAsync();
+                int isResult = await _contextDB.SaveChangesAsync();
+                if (isResult > 0)
+                {
+                    _cache.Remove(project.Id);
+                    _cache.Set(project.Id, project, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
+                }
 
                 _logger.LogInformation($"Изменен проект - {project.Id}");
                 return project;
@@ -150,7 +171,11 @@ namespace ServicesAPI.BusinessLogic.Services.Proejct
                     _logger.LogInformation($"Удален файл - {project.NameImage}");
                 }
 
-                await _contextDB.SaveChangesAsync();
+                int isResult = await _contextDB.SaveChangesAsync();
+                if (isResult > 0)
+                {
+                    _cache.Remove(project.Id);                 
+                }
 
                 _logger.LogInformation($"Удален проект - {prId}");
                 return true;

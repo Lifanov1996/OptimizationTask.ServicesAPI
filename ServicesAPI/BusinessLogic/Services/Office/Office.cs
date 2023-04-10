@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.BusinessLogic.Services.Header;
 using ServicesAPI.Data.Entity;
 using ServicesAPI.Models.Offices;
+using System.Security.Cryptography;
 
 namespace ServicesAPI.BusinessLogic.Services.Office
 {
@@ -10,11 +12,13 @@ namespace ServicesAPI.BusinessLogic.Services.Office
     {
         private readonly ContextDB _contextDB;
         private ILogger<Office> _logger;
+        private readonly IMemoryCache _cache;
 
-        public Office(ContextDB contextDB, ILogger<Office> logger)
+        public Office(ContextDB contextDB, ILogger<Office> logger, IMemoryCache memoryCache)
         {
             _contextDB = contextDB;
             _logger = logger;
+            _cache = memoryCache;
             _logger.LogInformation("Инициализирован Office");
         }
 
@@ -23,11 +27,17 @@ namespace ServicesAPI.BusinessLogic.Services.Office
         {
             try
             {
-                var office = await _contextDB.Offices.FindAsync(offId);
-                if (office == null)
+                Offices office = null;
+                if(!_cache.TryGetValue(offId, out office))
                 {
-                    _logger.LogWarning($"Запрос на услугу - {offId}. Услуга не найдена");
-                    throw new Exception("Услуга не найдена.");
+                    office = await _contextDB.Offices.FindAsync(offId);
+
+                    if (office == null)
+                    {
+                        _logger.LogWarning($"Запрос на услугу - {offId}. Услуга не найдена");
+                        throw new Exception("Услуга не найдена.");
+                    }
+                    _cache.Set(office.Id, office, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
                 }
                 return office;
             }
@@ -40,23 +50,28 @@ namespace ServicesAPI.BusinessLogic.Services.Office
 
 
         public async Task<IEnumerable<Offices>> GetAllOfficesAsync()
-        {
-            return await _contextDB.Offices.AsNoTracking().ToListAsync();
+        {         
+            return await _contextDB.Offices.AsNoTracking().ToListAsync();         
         }
 
 
-        public async Task<Offices> AddOfficeAsync(OfficesAdd office)
+        public async Task<Offices> AddOfficeAsync(OfficesAdd officeAdd)
         {
             try
             {
-                Offices model = new Offices { Header = office.Header, 
-                                              Description = office.Description };
+                Offices office = new Offices { Header = officeAdd.Header, 
+                                              Description = officeAdd.Description };
 
-                await _contextDB.Offices.AddAsync(model);
-                await _contextDB.SaveChangesAsync();
+                await _contextDB.Offices.AddAsync(office);
+                int isResult = await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Добавлена услуга - {model.Id}");
-                return model;
+                if (isResult > 0)
+                {
+                    _cache.Set(office.Id, office, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
+                }
+
+                _logger.LogInformation($"Добавлена услуга - {office.Id}");
+                return office;
             }
             catch(Exception ex)
             {
@@ -77,7 +92,12 @@ namespace ServicesAPI.BusinessLogic.Services.Office
                 }
 
                 _contextDB.Offices.Update(office);
-                await _contextDB.SaveChangesAsync();
+                int isResult = await _contextDB.SaveChangesAsync();
+                if (isResult > 0)
+                {
+                    _cache.Remove(office.Id);
+                    _cache.Set(office.Id, office, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
+                }
 
                 _logger.LogInformation($"Изменена услуга - {office.Id}");
                 return office;
@@ -101,7 +121,11 @@ namespace ServicesAPI.BusinessLogic.Services.Office
                 }
                 
                 _contextDB.Offices.Remove(office);
-                await _contextDB.SaveChangesAsync();
+                int isResult = await _contextDB.SaveChangesAsync();
+                if(isResult > 0)
+                {
+                    _cache.Remove(offId);                   
+                }
 
                 _logger.LogInformation($"Удалена услуга - {offId}");
                 return true;     

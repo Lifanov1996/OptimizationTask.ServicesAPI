@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using ServicesAPI.BusinessLogic.Contracts;
 using ServicesAPI.BusinessLogic.Services.Proejct;
 using ServicesAPI.Data.Entity;
@@ -11,12 +12,14 @@ namespace ServicesAPI.BusinessLogic.Services.News
         private readonly IImage _image;
         private readonly ContextDB _contextDB;
         private ILogger<Tiding> _logger;
+        private readonly IMemoryCache _cache;
 
-        public Tiding(ContextDB contextDB, ILogger<Tiding> logger, IImage image) 
+        public Tiding(ContextDB contextDB, ILogger<Tiding> logger, IImage image, IMemoryCache memoryCache) 
         {
             _image = image;
             _contextDB = contextDB;
             _logger = logger;
+            _cache = memoryCache;
             _logger.LogInformation("Инициализирован Tiding");
         }
 
@@ -25,13 +28,19 @@ namespace ServicesAPI.BusinessLogic.Services.News
         {
             try
             {
-                var result = await _contextDB.Tidings.FindAsync(tidId);     
-                if(result == null)
+                Tidings tiding = null;
+                if(!_cache.TryGetValue(tidId, out tiding))
                 {
-                    _logger.LogWarning($"Запрос на новость - {tidId}. Новость не найдена");
-                    throw new Exception("Новость не найдена");
+                    tiding = await _contextDB.Tidings.FindAsync(tidId);  
+                    
+                    if(tiding == null)
+                    {
+                        _logger.LogWarning($"Запрос на новость - {tidId}. Новость не найдена");
+                        throw new Exception("Новость не найдена");
+                    }
+                    _cache.Set(tiding.Id, tiding, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
                 }
-                return result;
+                return tiding;
             }
             catch(Exception ex)
             {
@@ -47,35 +56,40 @@ namespace ServicesAPI.BusinessLogic.Services.News
         }
 
 
-        public async Task<Tidings> AddTidingAsync(TidingsAdd tid)
+        public async Task<Tidings> AddTidingAsync(TidingsAdd tidingAdd)
         {
             try
             {
-                if (tid.Image == null && tid.UrlImage == null)
+                if (tidingAdd.Image == null && tidingAdd.UrlImage == null)
                 {
                     throw new Exception("Изображение не загруженно! Добавьте изображение или url- изображения.");
                 }
 
                 string nameImage = null;
                 string urlImage = null;
-                if (tid.Image != null)
+                if (tidingAdd.Image != null)
                 {
-                    nameImage = await _image.AddImageAsync(tid.Image);
+                    nameImage = await _image.AddImageAsync(tidingAdd.Image);
                     urlImage = "https://localhost:7297" + nameImage;
-                    _logger.LogInformation($"Загружен файл - {tid.Image.FileName}");
+                    _logger.LogInformation($"Загружен файл - {tidingAdd.Image.FileName}");
                 }
 
-                Tidings model = new Tidings() { DateTimePublication = DateTime.Now,
-                                                Header = tid.Header,
+                Tidings tiding = new Tidings() { DateTimePublication = DateTime.Now,
+                                                Header = tidingAdd.Header,
                                                 NameImage = nameImage,
-                                                UrlImage = urlImage?? tid.UrlImage,
-                                                Description = tid.Description };
+                                                UrlImage = urlImage?? tidingAdd.UrlImage,
+                                                Description = tidingAdd.Description };
 
-                await _contextDB.Tidings.AddAsync(model);
-                await _contextDB.SaveChangesAsync();
+                await _contextDB.Tidings.AddAsync(tiding);
+                int isResult = await _contextDB.SaveChangesAsync();
 
-                _logger.LogInformation($"Добавлена новая новость - {model.Id}");
-                return model;
+                if (isResult > 0)
+                {
+                    _cache.Set(tiding.Id, tiding, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
+                }
+
+                _logger.LogInformation($"Добавлена новая новость - {tiding.Id}");
+                return tiding;
             }
             catch(Exception ex)
             { 
@@ -85,42 +99,47 @@ namespace ServicesAPI.BusinessLogic.Services.News
         }
 
 
-        public async Task<Tidings> UpdateTidingAppAsync(Tidings tid)
+        public async Task<Tidings> UpdateTidingAppAsync(Tidings tiding)
         {
             try
             {
-                var isData = await _contextDB.Tidings.FindAsync(tid.Id);
+                var isData = await _contextDB.Tidings.FindAsync(tiding.Id);
                 if (isData == null)
                 {
                     throw new Exception("Новость не найден");
                 }
 
-                if (tid.NameImage == null && tid.UrlImage == null)
+                if (tiding.NameImage == null && tiding.UrlImage == null)
                 {
                     throw new Exception("Изображение не загруженно! Добавьте изображение или url- изображения.");
                 }
 
-                isData.Header = tid.Header;
+                isData.Header = tiding.Header;
 
                 if (isData.NameImage != null)
                 {
                     await _image.DeletImageAsync(isData.NameImage);
                 }
 
-                isData.NameImage = tid.NameImage;
+                isData.NameImage = tiding.NameImage;
 
                 string urlImage = null;
-                if (tid.NameImage != null)
+                if (tiding.NameImage != null)
                 {
-                    urlImage = "https://localhost:7297" + tid.NameImage;
-                    _logger.LogInformation($"Загружен файл - {tid.NameImage}");
+                    urlImage = "https://localhost:7297" + tiding.NameImage;
+                    _logger.LogInformation($"Загружен файл - {tiding.NameImage}");
                 }
-                isData.UrlImage = urlImage ?? tid.UrlImage;
-                isData.Description = tid.Description;
+                isData.UrlImage = urlImage ?? tiding.UrlImage;
+                isData.Description = tiding.Description;
 
-                await _contextDB.SaveChangesAsync();
+                int isResult = await _contextDB.SaveChangesAsync();
+                if (isResult > 0)
+                {
+                    _cache.Remove(tiding.Id);
+                    _cache.Set(tiding.Id, tiding, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1)));
+                }
 
-                _logger.LogInformation($"Изменена новость - {tid.Id}");
+                _logger.LogInformation($"Изменена новость - {tiding.Id}");
                 return isData;
             }
             catch(Exception ex)
@@ -135,22 +154,26 @@ namespace ServicesAPI.BusinessLogic.Services.News
         {
             try
             {
-                var result = await _contextDB.Tidings.FindAsync(tidId);
-                if (result == null)
+                var tiding = await _contextDB.Tidings.FindAsync(tidId);
+                if (tiding == null)
                 {
                     _logger.LogInformation($"Запрос на удаление новости - {tidId}. Новость не была найден.");
                     throw new Exception("Новость не найден. Ошибка удаления.");
                 }
 
-                _contextDB.Tidings.Remove(result);
+                _contextDB.Tidings.Remove(tiding);
 
-                if (result.NameImage != null)
+                if (tiding.NameImage != null)
                 {
-                    await _image.DeletImageAsync(result.NameImage);
-                    _logger.LogInformation($"Удален файл - {result.NameImage}");
+                    await _image.DeletImageAsync(tiding.NameImage);
+                    _logger.LogInformation($"Удален файл - {tiding.NameImage}");
                 }              
 
-                await _contextDB.SaveChangesAsync();
+                int isResult = await _contextDB.SaveChangesAsync();
+                if (isResult > 0)
+                {
+                    _cache.Remove(tiding.Id);
+                }
 
                 _logger.LogInformation($"Удаление новости - {tidId}");
                 return true;               
